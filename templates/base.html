@@ -1,0 +1,1077 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Aegis - A Sovereign Digital Identity Framework for India">
+    <meta name="keywords" content="digital identity, India, blockchain, security, authentication">
+    <meta name="author" content="Aegis Innovative">
+    
+    <title>{% block title %}Aegis - Sovereign Digital Identity Framework{% endblock %}</title>
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="https://cdn.tailwindcss.com" as="style">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" as="style">
+    
+    <!-- External Resources -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{% static 'img/Logo.png' %}">
+    
+    <!-- Custom Styles -->
+    <style>
+        /* Font Declarations */
+        @font-face {
+            font-family: 'MoonWalk';
+            src: url('{% static "fonts/MoonWalk.ttf" %}') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }    
+        @font-face {
+            font-family: 'Mooxy';
+            src: url('{% static "fonts/mooxy.ttf" %}') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        /* Base Styles */
+        :root {
+            --primary-blue: #1e40af;
+            --primary-dark: #0f172a;
+            --accent-blue: #60a5fa;
+            --text-light: #f8fafc;
+            --text-gray: #94a3b8;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #1e3a8a 50%, #1e40af 100%);
+            min-height: 100vh;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+        
+        /* Typography */
+        .font-moonwalk {
+            font-family: 'MoonWalk', 'Inter', sans-serif;
+        }
+        
+        .font-mooxy {
+            font-family: 'Mooxy', cursive;
+        }
+
+        /* Add to your base.css or in base.html */
+        .dark-card {
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(71, 85, 105, 0.3);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid rgba(71, 85, 105, 0.5);
+            border-radius: 0.5rem;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #1e40af, #1e3a8a);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #1e3a8a, #1e40af);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(90deg, var(--accent-blue), #93c5fd, #dbeafe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-text {
+            background: linear-gradient(90deg, #046da9, #a9d1ff, #dbeafe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Layout Components */
+        .hero-gradient {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #1e3a8a 50%, #1e40af 100%);
+        }
+
+        .section-gradient {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #1e293b 100%);
+        }
+        
+        .dark-card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(71, 85, 105, 0.5);
+            transition: all 0.3s ease;
+        }
+        
+        .dark-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+            border-color: rgba(96, 165, 250, 0.5);
+        }
+        
+        /* Navigation */
+        .nav-link {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--accent-blue);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        /* Animations */
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .logo-motion-gradient {
+            font-family: 'MoonWalk', cursive;
+            background: linear-gradient(90deg, #60a5fa, #7384f6, #50816f, #2108da, #60a5fa);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradient-shift 8s ease infinite;
+        }
+        
+        /* FAQ Accordion */
+        .faq-item {
+            border-bottom: 1px solid rgba(71, 85, 105, 0.5);
+        }
+        
+        .faq-question {
+            cursor: pointer;
+            padding: 1.5rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: color 0.3s ease;
+        }
+        
+        .faq-question:hover {
+            color: var(--accent-blue);
+        }
+        
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+        
+        .faq-answer.active {
+            max-height: 500px;
+            padding-bottom: 1.5rem;
+        }
+        
+        .faq-icon {
+            transition: transform 0.3s ease;
+        }
+        
+        .faq-icon.active {
+            transform: rotate(180deg);
+        }
+        
+        /* Form Elements */
+        .form-input {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(71, 85, 105, 0.5);
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-blue), #1e3a8a);
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(30, 64, 175, 0.3);
+        }
+        
+        /* Footer */
+        .footer-section {
+            background: linear-gradient(rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.95)), 
+                        url({% static 'svg/world.svg' %});
+            background-size: cover;
+            position: relative;
+        }
+        
+        .world-map-bg {
+            background-image: url({% static 'svg/world.svg' %});
+            background-size: cover;
+            opacity: 0.06;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1;
+        }
+        
+        /* Utility Classes */
+        .text-balance {
+            text-wrap: balance;
+        }
+        
+        .focus-outline:focus {
+            outline: 2px solid var(--accent-blue);
+            outline-offset: 2px;
+        }
+        
+        /* Loading States */
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        
+        /* Print Styles */
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+        }
+
+        /* Logo Loader Styles - UPDATED BACKGROUND */
+        .logo-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #3730a3 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .logo-loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-logo {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 2rem;
+            animation: logoFloat 3s ease-in-out infinite;
+        }
+
+        .loader-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .loader-text {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .loader-text h2 {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, #60a5fa, #93c5fd, #dbeafe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .loader-text p {
+            color: var(--text-gray);
+            font-size: 1rem;
+        }
+
+        .progress-bar {
+            width: 300px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #818cf8, #4f46e5);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        .speed-indicator {
+            margin-top: 1rem;
+            font-size: 0.875rem;
+            color: var(--text-gray);
+            text-align: center;
+        }
+
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-10px) scale(1.05); }
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(400%); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .loading-dots::after {
+            content: '';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60% { content: '...'; }
+            80%, 100% { content: ''; }
+        }
+
+        /* Performance optimizations */
+        .will-change-transform {
+            will-change: transform;
+        }
+
+        .will-change-opacity {
+            will-change: opacity;
+        }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-gray-900 text-gray-100 select-none">
+    <!-- Logo Loader -->
+    <div id="logoLoader" class="logo-loader will-change-opacity">
+        <div class="loader-logo will-change-transform">
+            <img src="{% static 'img/Logo.png' %}" alt="Aegis Logo" onerror="this.style.display='none'">
+        </div>
+        <div class="loader-text">
+            <h2 class="font-moonwalk">Aegis Innovative</h2>
+            <p>Loading<span class="loading-dots"></span></p>
+        </div>
+        <div class="progress-bar">
+            <div id="progressFill" class="progress-fill" style="width: 0%"></div>
+        </div>
+        <div id="speedIndicator" class="speed-indicator">
+            Detecting connection speed...
+        </div>
+    </div>
+
+    <!-- Skip to main content for accessibility -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded z-50">Skip to main content</a>
+    
+    <!-- Navigation -->
+    <nav class="bg-slate-900/95 backdrop-blur-sm shadow-lg sticky top-0 z-50 border-b border-slate-700 no-print">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <!-- Logo -->
+            <div class="flex items-center space-x-3">
+                <a href="{% url 'user:index' %}" class="flex items-center space-x-3 focus-outline rounded-lg p-1">
+                    <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center shadow-md hover:scale-105 transition-transform duration-300">
+                        <img src="{% static 'img/Logo.png' %}" class="w-6 h-6" alt="Aegis Logo">
+                    </div>
+                    <div class="flex flex-col leading-tight">
+                        <span class="text-2xl font-bold logo-text font-moonwalk logo-motion-gradient">Aegis</span>
+                        <span class="text-sm font-medium text-gray-300">Innovative</span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Desktop Navigation -->
+            <div class="hidden md:flex space-x-6 items-center">
+                {% if request.resolver_match.url_name == 'index' %}
+                <a href="#about" class="nav-link text-gray-300 hover:text-blue-400 font-medium py-2">About</a>
+                <a href="#overview" class="nav-link text-gray-300 hover:text-blue-400 font-medium py-2">Overview</a>
+                <a href="#architecture" class="nav-link text-gray-300 hover:text-blue-400 font-medium py-2">Architecture</a>
+                <a href="#components" class="nav-link text-gray-300 hover:text-blue-400 font-medium py-2">Components</a>
+                <a href="#benefits" class="nav-link text-gray-300 hover:text-blue-400 font-medium py-2">Benefits</a>
+                <a href="#roadmap" class="nav-link text-gray-300 hover:text-blue-400 font-medium py-2">Roadmap</a>
+
+                <a href="{% url 'user:community_join' %}" class="nav-link text-gray-300 hover:text-blue-400 font-medium py-2">Community</a>
+                <a href="{% url 'user:docs' %}" class="nav-link text-gray-300 hover:text-blue-400 font-medium py-2">Docs</a>
+                <a href="{% url 'user:faq' %}" class="nav-link text-gray-300 hover:text-blue-400 font-medium py-2">FAQ</a>
+                <a href="{% url 'user:contact' %}" class="nav-link text-gray-300 hover:text-blue-400 font-medium py-2">Contact</a>
+                {% else %}
+                <a href="{% url 'user:index' %}" class="nav-link text-gray-300 hover:text-blue-400 font-medium py-2">Home</a>
+                {% endif %}
+                
+                <!-- User Auth Section -->
+                <div class="flex items-center space-x-4 ml-4 pl-4 border-l border-slate-700">
+                    {% if user.is_authenticated and request.resolver_match.url_name != 'index' %}
+                        {% if user.is_superuser %}
+                            <!-- Superuser can access Dashboard and Register Device -->
+                            <a href="{% url 'user:dashboard' %}" class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-300 bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30">Dashboard</a>
+                            <a href="{% url 'user:register_device' %}" class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-300 bg-green-600/20 hover:bg-green-600/30 border border-green-500/30">Register Device</a>
+                        {% else %}
+                            <!-- Regular authenticated users see only basic options -->
+                            <a href="{% url 'user:community' %}" class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-300">Community</a>
+                            <a href="{% url 'user:docs' %}" class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-300">Documentation</a>
+                        {% endif %}
+                        
+                        <!-- User dropdown or profile info -->
+                        <div class="flex items-center space-x-2">
+                            <span class="text-sm text-gray-400">Welcome, {{ user.username }}</span>
+                            {% if user.is_superuser %}
+                            <span class="bg-purple-600 text-xs text-white px-2 py-1 rounded-full">Admin</span>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Logout button -->
+                        <form method="post" action="{% url 'user:logout' %}" class="inline">
+                            {% csrf_token %}
+                            <button type="submit" class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-300 bg-red-600/20 hover:bg-red-600/30 border border-red-500/30">
+                                <i class="fas fa-sign-out-alt mr-1"></i>Logout
+                            </button>
+                        </form>
+                    {% else %}
+                        <!-- Non-authenticated users -->
+                        <a href="{% url 'user:login' %}" class="text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-300 border border-indigo-500/30 hover:bg-indigo-600/20">Login</a>
+                        <a href="{% url 'user:register' %}" class="bg-white text-indigo-700 hover:bg-indigo-50 px-4 py-2 rounded-md text-sm font-medium transition duration-300 border border-white">Sign Up</a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-button" class="md:hidden text-gray-300 hover:text-blue-400 focus-outline p-2 rounded" aria-label="Toggle menu" aria-expanded="false">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-slate-800/95 backdrop-blur-sm py-4 px-4 shadow-lg border-t border-slate-700">
+            <div class="flex flex-col space-y-3">
+                {% if request.resolver_match.url_name == 'index' %}
+                <a href="#about" class="block py-2 text-gray-300 hover:text-blue-400 font-medium">About</a>
+                <a href="#overview" class="block py-2 text-gray-300 hover:text-blue-400 font-medium">Overview</a>            
+                <a href="#architecture" class="block py-2 text-gray-300 hover:text-blue-400 font-medium">Architecture</a>
+                <a href="#components" class="block py-2 text-gray-300 hover:text-blue-400 font-medium">Components</a>
+                <a href="#benefits" class="block py-2 text-gray-300 hover:text-blue-400 font-medium">Benefits</a>
+                <a href="#roadmap" class="block py-2 text-gray-300 hover:text-blue-400 font-medium">Roadmap</a>
+                {% else %}
+                <a href="{% url 'user:index' %}" class="block py-2 text-gray-300 hover:text-blue-400 font-medium">Home</a>
+                {% endif %}
+                <a href="{% url 'user:community_join' %}" class="block py-2 text-gray-300 hover:text-blue-400 font-medium">Community</a>
+                <a href="{% url 'user:docs' %}" class="block py-2 text-gray-300 hover:text-blue-400 font-medium">Docs</a>
+                <a href="{% url 'user:faq' %}" class="block py-2 text-gray-300 hover:text-blue-400 font-medium">FAQ</a>
+                <a href="{% url 'user:contact' %}" class="block py-2 text-gray-300 hover:text-blue-400 font-medium">Contact</a>
+                
+                <!-- Mobile User Auth Section -->
+                <div class="pt-4 mt-4 border-t border-slate-700">
+                    <div class="flex flex-col space-y-3">
+                        {% if user.is_authenticated %}
+                            <!-- User info -->
+                            <div class="flex items-center justify-between py-2">
+                                <span class="text-sm text-gray-300">Welcome, {{ user.username }}</span>
+                                {% if user.is_superuser %}
+                                <span class="bg-purple-600 text-xs text-white px-2 py-1 rounded-full">Admin</span>
+                                {% endif %}
+                            </div>
+                            
+                            {% if user.is_superuser %}
+                                <!-- Superuser mobile menu items -->
+                                <a href="{% url 'user:dashboard' %}" class="flex items-center text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-300 bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30">
+                                    <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                                </a>
+                                <a href="{% url 'user:register_device' %}" class="flex items-center text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-300 bg-green-600/20 hover:bg-green-600/30 border border-green-500/30">
+                                    <i class="fas fa-microchip mr-2"></i>Register Device
+                                </a>
+                            {% else %}
+                                <!-- Regular user mobile menu items -->
+                                <a href="{% url 'user:community_join' %}" class="flex items-center text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-300">
+                                    <i class="fas fa-users mr-2"></i>Community
+                                </a>
+                                <a href="{% url 'user:docs' %}" class="flex items-center text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-300">
+                                    <i class="fas fa-book mr-2"></i>Documentation
+                                </a>
+                            {% endif %}
+                            
+                            <!-- Logout button -->
+                            <form method="post" action="{% url 'user:logout' %}" class="inline">
+                                {% csrf_token %}
+                                <button type="submit" class="flex items-center w-full text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-300 bg-red-600/20 hover:bg-red-600/30 border border-red-500/30">
+                                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                                </button>
+                            </form>
+                        {% else %}
+                            <!-- Non-authenticated mobile users -->
+                            <a href="{% url 'user:login' %}" class="flex items-center text-indigo-200 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-300 border border-indigo-500/30 hover:bg-indigo-600/20">
+                                <i class="fas fa-sign-in-alt mr-2"></i>Login
+                            </a>
+                            <a href="{% url 'user:register' %}" class="flex items-center bg-white text-indigo-700 hover:bg-indigo-50 px-4 py-2 rounded-md text-sm font-medium transition duration-300 border border-white">
+                                <i class="fas fa-user-plus mr-2"></i>Sign Up
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Messages/Alerts -->
+    {% if messages %}
+        <div class="fixed top-4 right-4 z-50 space-y-3 w-80 max-w-full" id="notification-container">
+            {% for message in messages %}
+            <div class="relative p-4 rounded-xl shadow-lg border backdrop-blur-sm transform transition-all duration-300 ease-out 
+                        {% if message.tags == 'success' %}bg-green-900/90 border-green-700 text-green-100
+                        {% elif message.tags == 'error' %}bg-red-900/90 border-red-700 text-red-100
+                        {% elif message.tags == 'warning' %}bg-yellow-900/90 border-yellow-700 text-yellow-100
+                        {% else %}bg-blue-900/90 border-blue-700 text-blue-100{% endif %}"
+                style="animation: slideInRight 0.3s ease-out;">
+                <div class="flex items-start justify-between">
+                    <div class="flex items-start space-x-3">
+                        <i class="fas {% if message.tags == 'success' %}fa-check-circle{% elif message.tags == 'error' %}fa-exclamation-circle{% elif message.tags == 'warning' %}fa-exclamation-triangle{% else %}fa-info-circle{% endif %} mt-0.5"></i>
+                        <div>
+                            <p class="font-semibold">
+                                {% if message.tags == 'success' %}Success
+                                {% elif message.tags == 'error' %}Error
+                                {% elif message.tags == 'warning' %}Warning
+                                {% else %}Info{% endif %}
+                            </p>
+                            <p class="text-sm opacity-90 mt-1">{{ message }}</p>
+                        </div>
+                    </div>
+                    <button onclick="this.parentElement.parentElement.style.animation='slideOutRight 0.3s ease-in forwards'; setTimeout(() => this.parentElement.parentElement.remove(), 300)" 
+                            class="flex-shrink-0 w-4 h-4 opacity-70 hover:opacity-100 transition-opacity">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <!-- Progress Bar -->
+                <div class="absolute bottom-0 left-0 w-full h-1 bg-black/20 rounded-b-xl overflow-hidden">
+                    <div class="h-full bg-current opacity-30 animate-[progress_5s_linear_forwards]"></div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <style>
+            @keyframes slideInRight {
+                from { opacity: 0; transform: translateX(100%); }
+                to { opacity: 1; transform: translateX(0); }
+            }
+            @keyframes slideOutRight {
+                from { opacity: 1; transform: translateX(0); }
+                to { opacity: 0; transform: translateX(100%); }
+            }
+            @keyframes progress {
+                from { width: 100%; }
+                to { width: 0%; }
+            }
+            
+            /* Auto-remove after 5 seconds */
+            #notification-container > div {
+                animation: slideInRight 0.3s ease-out;
+            }
+            #notification-container > div:hover .animate-\[progress_5s_linear_forwards\] {
+                animation-play-state: paused;
+            }
+        </style>
+
+        <script>
+            // Auto-close after 5 seconds
+            document.addEventListener('DOMContentLoaded', function() {
+                const notifications = document.querySelectorAll('#notification-container > div');
+                notifications.forEach(notification => {
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.style.animation = 'slideOutRight 0.3s ease-in forwards';
+                            setTimeout(() => notification.remove(), 300);
+                        }
+                    }, 15000);
+                });
+            });
+        </script>
+    {% endif %}
+
+    <!-- Main Content -->
+    <main id="main-content" class="flex-grow">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    {% if request.resolver_match.url_name == 'index' %}
+    <footer class="footer-section">
+        
+        <div class="container mx-auto px-4 footer-content z-[99999px]">
+            <div class="world-map-bg"></div>
+            <!-- Contact Info Section -->
+            <div class="footer-cta py-12 border-b border-gray-700">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Location -->
+                    <div class="flex items-start">
+                        <i class="fas fa-map-marker-alt text-blue-400 text-2xl mt-1 mr-4"></i>
+                        <div>
+                            <h4 class="text-white text-xl font-semibold mb-2">Find us</h4>
+                            <span class="text-gray-400">Kanchipuram, TamilNadu, South India</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Phone -->
+                    <div class="flex items-start">
+                        <i class="fas fa-phone text-blue-400 text-2xl mt-1 mr-4"></i>
+                        <div>
+                            <h4 class="text-white text-xl font-semibold mb-2">Call us</h4>
+                            <span class="text-gray-400">+91 6379077144</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Email -->
+                    <div class="flex items-start">
+                        <i class="far fa-envelope-open text-blue-400 text-2xl mt-1 mr-4"></i>
+                        <div>
+                            <h4 class="text-white text-xl font-semibold mb-2">Mail us</h4>
+                            <span class="text-gray-400">aegisinitiative45@gmail.com</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Main Footer Content -->
+            <div class="footer-content py-12">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                    <!-- Company Info -->
+                    <div class="mb-8 lg:mb-0">
+                        <div class="flex items-center space-x-3 mb-6">
+                            <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center shadow-md">
+                                <img src="{% static 'img/Logo.png' %}" class="w-6 h-6" alt="Aegis Logo">
+                            </div>
+                            <div class="flex flex-col leading-tight">
+                                <span class="text-2xl font-bold logo-text font-moonwalk logo-motion-gradient">Aegis</span>
+                                <span class="text-sm font-medium text-gray-300">Innovative</span>
+                            </div>
+                        </div>
+                        <div class="mb-6">
+                            <p class="text-gray-400 text-sm leading-relaxed text-balance">
+                                Building sovereign digital infrastructure for India's future through secure, decentralized identity solutions.
+                            </p>
+                        </div>
+                        <div class="footer-social-icon">
+                            <span class="text-white block text-lg font-semibold mb-4">Follow the developer</span>
+                            <div class="flex space-x-3">
+                                <a href="#" class="bg-slate-700 hover:bg-blue-600 text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300" aria-label="Facebook">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                                <a href="#" class="bg-slate-700 hover:bg-blue-400 text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300" aria-label="Twitter">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                <a href="#" class="bg-slate-700 hover:bg-pink-600 text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300" aria-label="Instagram">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                                <a href="#" class="bg-slate-700 hover:bg-blue-700 text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300" aria-label="LinkedIn">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Useful Links -->
+                    <div class="mb-8 lg:mb-0">
+                        <div class="footer-widget-heading mb-8 relative">
+                            <h3 class="text-white text-xl font-semibold mb-2">Useful Links</h3>
+                            <div class="absolute w-12 h-1 bg-blue-500 -bottom-2 left-0 rounded-full"></div>
+                        </div>
+                        <ul class="grid grid-cols-2 gap-3">
+                            <li><a href="{% url 'user:index' %}" class="text-gray-400 hover:text-blue-400 transition-colors duration-300 py-1 block">Home</a></li>
+                            <li><a href="#about" class="text-gray-400 hover:text-blue-400 transition-colors duration-300 py-1 block">About</a></li>
+                            <li><a href="#architecture" class="text-gray-400 hover:text-blue-400 transition-colors duration-300 py-1 block">Architecture</a></li>
+                            <li><a href="#roadmap" class="text-gray-400 hover:text-blue-400 transition-colors duration-300 py-1 block">Roadmap</a></li>
+                            <li><a href="{% url 'user:community' %}" class="text-gray-400 hover:text-blue-400 transition-colors duration-300 py-1 block">Community</a></li>
+                            <li><a href="{% url 'user:docs' %}" class="text-gray-400 hover:text-blue-400 transition-colors duration-300 py-1 block">Documentation</a></li>
+                            <li><a href="{% url 'user:faq' %}" class="text-gray-400 hover:text-blue-400 transition-colors duration-300 py-1 block">FAQ</a></li>
+                            <li><a href="{% url 'user:contact' %}" class="text-gray-400 hover:text-blue-400 transition-colors duration-300 py-1 block">Contact</a></li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Newsletter -->
+                    <div>
+                        <div class="footer-widget-heading mb-8 relative">
+                            <h3 class="text-white text-xl font-semibold mb-2">Subscribe</h3>
+                            <div class="absolute w-12 h-1 bg-blue-500 -bottom-2 left-0 rounded-full"></div>
+                        </div>
+                        <div class="mb-6">
+                            <p class="text-gray-400 text-sm">Stay updated with our latest developments and news.</p>
+                        </div>
+                        <form method="post" action="{% url 'user:subscribe' %}" class="subscribe-form">
+                            {% csrf_token %}
+                            <div class="flex flex-col space-y-3">
+                                <input type="email" name="email" placeholder="Email Address" required
+                                       class="bg-slate-800 border border-slate-700 text-white py-3 px-4 rounded-lg focus:outline-none focus:border-blue-500 transition-colors duration-300">
+                                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg font-medium transition-colors duration-300 flex items-center justify-center">
+                                    <span>Subscribe</span>
+                                    <i class="fas fa-paper-plane ml-2"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Copyright Section -->
+        <div class="copyright-area bg-slate-900 py-6 border-t border-slate-800">
+            <div class="container mx-auto px-4">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <div class="copyright-text mb-4 md:mb-0">
+                        <p class="text-gray-500 text-sm text-center md:text-left">
+                            Copyright &copy; 2025 Aegis Innovative. All Rights Reserved.
+                        </p>
+                    </div>
+                    <div class="footer-menu">
+                        <ul class="flex space-x-6">
+                            <li><a href="{% url 'user:index' %}" class="text-gray-500 hover:text-blue-400 text-sm transition-colors duration-300">Home</a></li>
+                            <li><a href="#" class="text-gray-500 hover:text-blue-400 text-sm transition-colors duration-300">Terms</a></li>
+                            <li><a href="#" class="text-gray-500 hover:text-blue-400 text-sm transition-colors duration-300">Privacy</a></li>
+                            <li><a href="#" class="text-gray-500 hover:text-blue-400 text-sm transition-colors duration-300">Policy</a></li>
+                            <li><a href="{% url 'user:contact' %}" class="text-gray-500 hover:text-blue-400 text-sm transition-colors duration-300">Contact</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    {% else %}
+    <!-- Simple Footer for other pages -->
+    <footer class="bg-slate-900 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <p class="text-base text-gray-400">&copy; 2025 Aegis Innovative. All rights reserved.</p>
+                <p class="text-sm text-gray-500 mt-2">Building Sovereign Digital Identity Infrastructure for India.</p>
+            </div>
+        </div>
+    </footer>
+    {% endif %}
+
+    <!-- JavaScript -->
+    <script>
+        // Logo Loader with Internet Speed Detection
+        class LogoLoader {
+            constructor() {
+                this.loader = document.getElementById('logoLoader');
+                this.progressFill = document.getElementById('progressFill');
+                this.speedIndicator = document.getElementById('speedIndicator');
+                this.startTime = performance.now();
+                this.loadDuration = 0;
+                this.speedCategory = 'unknown';
+                
+                this.init();
+            }
+
+            async init() {
+                // Start progress animation
+                this.animateProgress();
+                
+                // Detect internet speed
+                await this.detectInternetSpeed();
+                
+                // Adjust loader timing based on speed
+                this.adjustLoaderTiming();
+                
+                // Hide loader when page is ready
+                this.hideLoader();
+            }
+
+            animateProgress() {
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += Math.random() * 10;
+                    if (progress >= 100) {
+                        progress = 100;
+                        clearInterval(interval);
+                    }
+                    this.progressFill.style.width = `${progress}%`;
+                }, 200);
+            }
+
+            async detectInternetSpeed() {
+                const imageUrl = '{% static "img/Logo.png" %}';
+                const startTime = performance.now();
+                
+                try {
+                    const response = await fetch(imageUrl, { method: 'HEAD', cache: 'no-cache' });
+                    const endTime = performance.now();
+                    
+                    if (response.ok) {
+                        const contentLength = response.headers.get('content-length');
+                        const fileSize = contentLength ? parseInt(contentLength) : 5000; // Default 5KB
+                        const duration = endTime - startTime;
+                        const speed = (fileSize / duration) * 8; // Convert to kbps
+                        
+                        this.determineSpeedCategory(speed);
+                    }
+                } catch (error) {
+                    console.log('Speed detection failed, using fallback');
+                    this.speedCategory = 'slow';
+                }
+            }
+
+            determineSpeedCategory(speedKbps) {
+                if (speedKbps > 5000) {
+                    this.speedCategory = 'very-fast';
+                    this.speedIndicator.textContent = '🚀 Very Fast Connection';
+                } else if (speedKbps > 1000) {
+                    this.speedCategory = 'fast';
+                    this.speedIndicator.textContent = '⚡ Fast Connection';
+                } else if (speedKbps > 500) {
+                    this.speedCategory = 'moderate';
+                    this.speedIndicator.textContent = '📶 Good Connection';
+                } else if (speedKbps > 100) {
+                    this.speedCategory = 'slow';
+                    this.speedIndicator.textContent = '🐢 Slow Connection';
+                } else {
+                    this.speedCategory = 'very-slow';
+                    this.speedIndicator.textContent = '⚠️ Poor Connection';
+                }
+            }
+
+            adjustLoaderTiming() {
+                const baseDuration = 2000; // 2 seconds base
+                let additionalDelay = 0;
+
+                switch (this.speedCategory) {
+                    case 'very-fast':
+                        additionalDelay = 500; // 0.5s extra
+                        break;
+                    case 'fast':
+                        additionalDelay = 1000; // 1s extra
+                        break;
+                    case 'moderate':
+                        additionalDelay = 1500; // 1.5s extra
+                        break;
+                    case 'slow':
+                        additionalDelay = 2500; // 2.5s extra
+                        break;
+                    case 'very-slow':
+                        additionalDelay = 4000; // 4s extra
+                        break;
+                    default:
+                        additionalDelay = 2000; // 2s default
+                }
+
+                this.loadDuration = baseDuration + additionalDelay;
+            }
+
+            hideLoader() {
+                // Ensure minimum display time for branding
+                const elapsedTime = performance.now() - this.startTime;
+                const remainingTime = Math.max(0, this.loadDuration - elapsedTime);
+
+                setTimeout(() => {
+                    this.loader.classList.add('hidden');
+                    
+                    // Remove from DOM after animation completes
+                    setTimeout(() => {
+                        this.loader.remove();
+                    }, 500);
+                }, remainingTime);
+            }
+        }
+
+        // Initialize loader when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            new LogoLoader();
+        });
+
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            const isExpanded = this.getAttribute('aria-expanded') === 'true';
+            
+            menu.classList.toggle('hidden');
+            this.setAttribute('aria-expanded', !isExpanded);
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    const mobileMenu = document.getElementById('mobile-menu');
+                    const menuButton = document.getElementById('mobile-menu-button');
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                        menuButton.setAttribute('aria-expanded', 'false');
+                    }
+                    
+                    // Update URL without page reload
+                    if (history.pushState) {
+                        history.pushState(null, null, targetId);
+                    }
+                }
+            });
+        });
+
+        // FAQ Accordion
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const answer = question.nextElementSibling;
+                const icon = question.querySelector('.faq-icon');
+                
+                // Toggle active class
+                answer.classList.toggle('active');
+                icon.classList.toggle('active');
+                
+                // Close other FAQs
+                document.querySelectorAll('.faq-answer').forEach(otherAnswer => {
+                    if (otherAnswer !== answer && otherAnswer.classList.contains('active')) {
+                        otherAnswer.classList.remove('active');
+                        otherAnswer.previousElementSibling.querySelector('.faq-icon').classList.remove('active');
+                    }
+                });
+            });
+        });
+
+        // Form validation helper
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        // Add loading states to forms
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function() {
+                const submitButton = this.querySelector('button[type="submit"]');
+                if (submitButton) {
+                    submitButton.classList.add('loading');
+                    submitButton.disabled = true;
+                    submitButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Processing...';
+                }
+            });
+        });
+
+        // Add intersection observer for animations (can be extended)
+        if ('IntersectionObserver' in window) {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate-in');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            // Observe elements with data-animate attribute
+            document.querySelectorAll('[data-animate]').forEach(el => {
+                observer.observe(el);
+            });
+        }
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

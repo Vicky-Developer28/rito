@@ -1,0 +1,562 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block content %}
+    <title>Aegis - Site Under Development</title>
+
+    <!-- Custom Styles -->
+    <style>
+        /* Font Declarations */
+        @font-face {
+            font-family: 'MoonWalk';
+            src: url('{% static "fonts/MoonWalk.ttf" %}') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }    
+        @font-face {
+            font-family: 'Mooxy';
+            src: url('{% static "fonts/mooxy.ttf" %}') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        /* Base Styles */
+        :root {
+            --primary-blue: #1e40af;
+            --primary-dark: #0f172a;
+            --accent-blue: #60a5fa;
+            --text-light: #f8fafc;
+            --text-gray: #94a3b8;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #1e3a8a 50%, #1e40af 100%);
+            min-height: 100vh;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+        
+        /* Typography */
+        .font-moonwalk {
+            font-family: 'MoonWalk', 'Inter', sans-serif;
+        }
+        
+        .font-mooxy {
+            font-family: 'Mooxy', cursive;
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, var(--accent-blue), #93c5fd, #dbeafe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-text {
+            background: linear-gradient(90deg, #046da9, #a9d1ff, #dbeafe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Layout Components */
+        .hero-gradient {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #1e3a8a 50%, #1e40af 100%);
+        }
+
+        .section-gradient {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #1e293b 100%);
+        }
+        
+        .dark-card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(71, 85, 105, 0.5);
+            transition: all 0.3s ease;
+        }
+        
+        .dark-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+            border-color: rgba(96, 165, 250, 0.5);
+        }
+        
+        /* Animations */
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .logo-motion-gradient {
+            font-family: 'MoonWalk', cursive;
+            background: linear-gradient(90deg, #60a5fa, #7384f6, #50816f, #2108da, #60a5fa);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradient-shift 8s ease infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        /* Utility Classes */
+        .text-balance {
+            text-wrap: balance;
+        }
+        
+        .focus-outline:focus {
+            outline: 2px solid var(--accent-blue);
+            outline-offset: 2px;
+        }
+
+        /* Logo Loader Styles */
+        .logo-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #3730a3 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .logo-loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-logo {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 2rem;
+            animation: logoFloat 3s ease-in-out infinite;
+        }
+
+        .loader-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .loader-text {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .loader-text h2 {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, #60a5fa, #93c5fd, #dbeafe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .loader-text p {
+            color: var(--text-gray);
+            font-size: 1rem;
+        }
+
+        .progress-bar {
+            width: 300px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #818cf8, #4f46e5);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        .speed-indicator {
+            margin-top: 1rem;
+            font-size: 0.875rem;
+            color: var(--text-gray);
+            text-align: center;
+        }
+
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-10px) scale(1.05); }
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(400%); }
+        }
+
+        .loading-dots::after {
+            content: '';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60% { content: '...'; }
+            80%, 100% { content: ''; }
+        }
+
+        /* Performance optimizations */
+        .will-change-transform {
+            will-change: transform;
+        }
+
+        .will-change-opacity {
+            will-change: opacity;
+        }
+    </style>
+
+
+    <!-- Main Content -->
+    <main id="main-content" class="flex-grow">
+        <!-- Hero Section -->
+        <section class="hero-gradient py-20 md:py-32">
+            <div class="container mx-auto px-4">
+                <div class="max-w-4xl mx-auto text-center">
+                    <!-- Construction Icon -->
+                    <div class="mb-8 float-animation">
+                        <i class="fas fa-tools text-6xl text-blue-400 mb-4"></i>
+                    </div>
+                    
+                    <!-- Main Heading -->
+                    <h1 class="text-4xl md:text-6xl font-bold mb-6">
+                        <span class="gradient-text">Site Under</span>
+                        <span class="text-white">Development</span>
+                    </h1>
+                    
+                    <!-- Subheading -->
+                    <p class="text-xl md:text-2xl text-gray-300 mb-8 max-w-2xl mx-auto text-balance">
+                        We're building something amazing for you!
+                    </p>
+                    
+                    <!-- Countdown Card -->
+                    <div class="dark-card rounded-2xl p-8 mb-10 max-w-md mx-auto">
+                        <div class="text-center">
+                            <h3 class="text-2xl font-bold text-white mb-4">Launching In</h3>
+                            <div class="flex justify-center space-x-4 mb-6">
+                                <div class="text-center">
+                                    <div class="bg-blue-900/50 rounded-lg p-4 w-48 h-16 flex items-center justify-center">
+                                        <span class="text-2xl font-bold text-white pulse-animation">2-3 Days</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <p class="text-gray-300 text-sm">
+                                Please check back soon for our official launch
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Call to Action -->
+                    <div class="flex flex-col sm:flex-row justify-center gap-4">
+                        <a href="mailto:aegisinitiative45@gmail.com" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-lg transition-all duration-300 transform hover:-translate-y-1 flex items-center justify-center">
+                            <i class="fas fa-envelope mr-2"></i>
+                            Contact Us
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Info Section -->
+        <section class="section-gradient py-16">
+            <div class="container mx-auto px-4">
+                <div class="max-w-4xl mx-auto">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- What's Coming -->
+                        <div class="dark-card rounded-2xl p-6">
+                            <div class="flex items-center mb-4">
+                                <i class="fas fa-rocket text-blue-400 text-xl mr-3"></i>
+                                <h3 class="text-xl font-bold text-white">What's Coming</h3>
+                            </div>
+                            <p class="text-gray-300">
+                                Aegis is a sovereign digital identity framework designed specifically for India, 
+                                providing secure, decentralized identity solutions using cutting-edge technology.
+                            </p>
+                            <ul class="mt-4 space-y-2">
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-400 mt-1 mr-2"></i>
+                                    <span class="text-gray-300">Blockchain-based identity verification</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-400 mt-1 mr-2"></i>
+                                    <span class="text-gray-300">Secure authentication protocols</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-400 mt-1 mr-2"></i>
+                                    <span class="text-gray-300">Privacy-focused design</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Why We're Building -->
+                        <div class="dark-card rounded-2xl p-6">
+                            <div class="flex items-center mb-4">
+                                <i class="fas fa-cogs text-blue-400 text-xl mr-3"></i>
+                                <h3 class="text-xl font-bold text-white">Why We're Building</h3>
+                            </div>
+                            <p class="text-gray-300">
+                                We believe in creating digital infrastructure that puts citizens in control of their identity data,
+                                ensuring privacy, security, and sovereignty.
+                            </p>
+                            <ul class="mt-4 space-y-2">
+                                <li class="flex items-start">
+                                    <i class="fas fa-shield-alt text-blue-400 mt-1 mr-2"></i>
+                                    <span class="text-gray-300">Enhanced security measures</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-user-lock text-blue-400 mt-1 mr-2"></i>
+                                    <span class="text-gray-300">User-controlled data</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-globe-asia text-blue-400 mt-1 mr-2"></i>
+                                    <span class="text-gray-300">Made for India's digital future</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="py-16">
+            <div class="container mx-auto px-4">
+                <div class="max-w-3xl mx-auto text-center">
+                    <h2 class="text-3xl font-bold text-white mb-4">Stay Updated</h2>
+                    <p class="text-gray-300 mb-8 max-w-2xl mx-auto">
+                        Want to be notified when we launch? Leave your email and we'll contact you as soon as Aegis is live.
+                    </p>
+                    
+                    <div class="dark-card rounded-2xl p-8">
+                        <form class="space-y-4">
+                            <div class="flex flex-col sm:flex-row gap-4">
+                                <input type="email" placeholder="Your email address" 
+                                       class="flex-grow bg-slate-800 border border-slate-700 text-white py-3 px-4 rounded-lg focus:outline-none focus:border-blue-500 transition-colors duration-300">
+                                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-300 flex items-center justify-center">
+                                    <span>Notify Me</span>
+                                    <i class="fas fa-paper-plane ml-2"></i>
+                                </button>
+                            </div>
+                            <p class="text-gray-400 text-sm">
+                                We respect your privacy and will never share your information.
+                            </p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <p class="text-base text-gray-400">&copy; 2025 Aegis Innovative. All rights reserved.</p>
+                <p class="text-sm text-gray-500 mt-2">Building Sovereign Digital Identity Infrastructure for India.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Logo Loader with Internet Speed Detection
+        class LogoLoader {
+            constructor() {
+                this.loader = document.getElementById('logoLoader');
+                this.progressFill = document.getElementById('progressFill');
+                this.speedIndicator = document.getElementById('speedIndicator');
+                this.startTime = performance.now();
+                this.loadDuration = 0;
+                this.speedCategory = 'unknown';
+                
+                this.init();
+            }
+
+            async init() {
+                // Start progress animation
+                this.animateProgress();
+                
+                // Detect internet speed
+                await this.detectInternetSpeed();
+                
+                // Adjust loader timing based on speed
+                this.adjustLoaderTiming();
+                
+                // Hide loader when page is ready
+                this.hideLoader();
+            }
+
+            animateProgress() {
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += Math.random() * 10;
+                    if (progress >= 100) {
+                        progress = 100;
+                        clearInterval(interval);
+                    }
+                    this.progressFill.style.width = `${progress}%`;
+                }, 200);
+            }
+
+            async detectInternetSpeed() {
+                const imageUrl = '{% static "img/Logo.png" %}';
+                const startTime = performance.now();
+                
+                try {
+                    const response = await fetch(imageUrl, { method: 'HEAD', cache: 'no-cache' });
+                    const endTime = performance.now();
+                    
+                    if (response.ok) {
+                        const contentLength = response.headers.get('content-length');
+                        const fileSize = contentLength ? parseInt(contentLength) : 5000; // Default 5KB
+                        const duration = endTime - startTime;
+                        const speed = (fileSize / duration) * 8; // Convert to kbps
+                        
+                        this.determineSpeedCategory(speed);
+                    }
+                } catch (error) {
+                    console.log('Speed detection failed, using fallback');
+                    this.speedCategory = 'slow';
+                }
+            }
+
+            determineSpeedCategory(speedKbps) {
+                if (speedKbps > 5000) {
+                    this.speedCategory = 'very-fast';
+                    this.speedIndicator.textContent = '🚀 Very Fast Connection';
+                } else if (speedKbps > 1000) {
+                    this.speedCategory = 'fast';
+                    this.speedIndicator.textContent = '⚡ Fast Connection';
+                } else if (speedKbps > 500) {
+                    this.speedCategory = 'moderate';
+                    this.speedIndicator.textContent = '📶 Good Connection';
+                } else if (speedKbps > 100) {
+                    this.speedCategory = 'slow';
+                    this.speedIndicator.textContent = '🐢 Slow Connection';
+                } else {
+                    this.speedCategory = 'very-slow';
+                    this.speedIndicator.textContent = '⚠️ Poor Connection';
+                }
+            }
+
+            adjustLoaderTiming() {
+                const baseDuration = 2000; // 2 seconds base
+                let additionalDelay = 0;
+
+                switch (this.speedCategory) {
+                    case 'very-fast':
+                        additionalDelay = 500; // 0.5s extra
+                        break;
+                    case 'fast':
+                        additionalDelay = 1000; // 1s extra
+                        break;
+                    case 'moderate':
+                        additionalDelay = 1500; // 1.5s extra
+                        break;
+                    case 'slow':
+                        additionalDelay = 2500; // 2.5s extra
+                        break;
+                    case 'very-slow':
+                        additionalDelay = 4000; // 4s extra
+                        break;
+                    default:
+                        additionalDelay = 2000; // 2s default
+                }
+
+                this.loadDuration = baseDuration + additionalDelay;
+            }
+
+            hideLoader() {
+                // Ensure minimum display time for branding
+                const elapsedTime = performance.now() - this.startTime;
+                const remainingTime = Math.max(0, this.loadDuration - elapsedTime);
+
+                setTimeout(() => {
+                    this.loader.classList.add('hidden');
+                    
+                    // Remove from DOM after animation completes
+                    setTimeout(() => {
+                        this.loader.remove();
+                    }, 500);
+                }, remainingTime);
+            }
+        }
+
+        // Initialize loader when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            new LogoLoader();
+        });
+
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            const isExpanded = this.getAttribute('aria-expanded') === 'true';
+            
+            menu.classList.toggle('hidden');
+            this.setAttribute('aria-expanded', !isExpanded);
+        });
+
+        // Form submission handler
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = this.querySelector('input[type="email"]').value;
+            
+            if (email) {
+                // Show success message
+                alert(`Thank you! We'll notify you at ${email} when we launch.`);
+                this.reset();
+            }
+        });
+    </script>
+
+
+{% endblock %}

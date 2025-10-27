@@ -1,0 +1,292 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Rito Community - Questions & Answers{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 dark:bg-slate-900">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-white mb-2">Rito Community</h1>
+            <p class="text-gray-400">Ask questions, share knowledge, and connect with experts in digital sovereignty</p>
+        </div>
+
+        {% if not request.user.is_authenticated %}
+        <!-- Login Required Message -->
+        <div class="dark-card rounded-xl p-8 text-center max-w-2xl mx-auto">
+            <i class="fas fa-users text-4xl text-blue-400 mb-4"></i>
+            <h2 class="text-2xl font-bold text-white mb-4">Join the Rito Community</h2>
+            <p class="text-gray-400 mb-6">Connect with experts, ask questions, and share knowledge about digital sovereignty and secure identity systems.</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="{% url 'user:login' %}?next={% url 'user:community' %}" 
+                   class="btn-primary inline-flex items-center justify-center">
+                    <i class="fas fa-sign-in-alt mr-2"></i>
+                    Sign In to Community
+                </a>
+                <a href="{% url 'user:register' %}" 
+                   class="px-6 py-3 border border-gray-600 text-gray-300 hover:bg-gray-700 rounded-lg transition-colors inline-flex items-center justify-center">
+                    <i class="fas fa-user-plus mr-2"></i>
+                    Create Account
+                </a>
+            </div>
+        </div>
+        {% else %}
+        <!-- Main Community Content (only shown when logged in) -->
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Left Sidebar -->
+            <div class="lg:w-1/4 space-y-6">
+                <!-- Ask Question Button -->
+                {% if member %}
+                <a href="{% url 'user:ask_question' %}" 
+                   class="w-full btn-primary flex items-center justify-center">
+                    <i class="fas fa-plus mr-2"></i>
+                    Ask Question
+                </a>
+                {% else %}
+                <div class="dark-card rounded-xl p-4 text-center">
+                    <i class="fas fa-id-card text-yellow-400 text-2xl mb-2"></i>
+                    <p class="text-gray-400 text-sm mb-3">Complete your community profile to ask questions</p>
+                    <a href="{% url 'user:community_join' %}" class="btn-primary inline-flex items-center text-sm">
+                        <i class="fas fa-user-plus mr-1"></i>
+                        Complete Profile
+                    </a>
+                </div>
+                {% endif %}
+
+                <!-- Navigation -->
+                <div class="dark-card rounded-xl p-4">
+                    <nav class="space-y-2">
+                        <a href="{% url 'user:community' %}" 
+                           class="flex items-center px-3 py-2 text-gray-300 hover:bg-slate-700 rounded-lg transition-colors {% if request.path == '/community/' %}bg-slate-700 text-white{% endif %}">
+                            <i class="fas fa-home mr-3"></i>
+                            Home
+                        </a>
+                        <a href="{% url 'user:topics' %}" 
+                           class="flex items-center px-3 py-2 text-gray-300 hover:bg-slate-700 rounded-lg transition-colors">
+                            <i class="fas fa-tags mr-3"></i>
+                            Topics
+                        </a>
+                        <a href="#" 
+                           class="flex items-center px-3 py-2 text-gray-300 hover:bg-slate-700 rounded-lg transition-colors">
+                            <i class="fas fa-bookmark mr-3"></i>
+                            Bookmarks
+                        </a>
+                        <a href="{% url 'user:search' %}" 
+                           class="flex items-center px-3 py-2 text-gray-300 hover:bg-slate-700 rounded-lg transition-colors">
+                            <i class="fas fa-search mr-3"></i>
+                            Search
+                        </a>
+                    </nav>
+                </div>
+
+                <!-- Trending Topics -->
+                <div class="dark-card rounded-xl p-4">
+                    <h3 class="font-semibold text-white mb-3 flex items-center">
+                        <i class="fas fa-fire text-orange-400 mr-2"></i>
+                        Trending Topics
+                    </h3>
+                    <div class="space-y-2">
+                        {% for topic in trending_topics %}
+                        <a href="{% url 'user:topic_detail' topic.slug %}" 
+                           class="flex items-center justify-between text-sm text-gray-400 hover:text-blue-400 transition-colors group">
+                            <span class="group-hover:underline">#{{ topic.name }}</span>
+                            <span class="bg-slate-700 px-2 py-1 rounded-full text-xs">
+                                {{ topic.question_count }}
+                            </span>
+                        </a>
+                        {% empty %}
+                        <p class="text-sm text-gray-500">No trending topics yet</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Community Stats -->
+                <div class="dark-card rounded-xl p-4">
+                    <h3 class="font-semibold text-white mb-3 flex items-center">
+                        <i class="fas fa-chart-bar text-green-400 mr-2"></i>
+                        Community Stats
+                    </h3>
+                    <div class="space-y-2 text-sm text-gray-400">
+                        <div class="flex justify-between">
+                            <span>Questions</span>
+                            <span class="font-semibold text-white">{{ questions.paginator.count }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Members</span>
+                            <span class="font-semibold text-white">{{ member_count }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Topics</span>
+                            <span class="font-semibold text-white">{{ trending_topics|length }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="lg:w-2/4 space-y-6">
+                <!-- Rest of the community content... -->
+                <!-- (Keep the existing feed content here) -->
+                
+                {% if not member %}
+                <!-- Profile Completion Banner -->
+                <div class="dark-card rounded-xl p-6 border-l-4 border-yellow-500">
+                    <div class="flex items-center">
+                        <i class="fas fa-exclamation-triangle text-yellow-400 text-2xl mr-4"></i>
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-white mb-1">Complete Your Community Profile</h3>
+                            <p class="text-gray-400 text-sm">To ask questions, vote, and participate fully in the community, please complete your profile.</p>
+                        </div>
+                        <a href="{% url 'user:community_join' %}" class="btn-primary inline-flex items-center text-sm">
+                            <i class="fas fa-user-edit mr-1"></i>
+                            Complete Profile
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Questions Feed -->
+                <div class="space-y-4">
+                    {% for question in questions %}
+                    <!-- Question card content... -->
+                    {% empty %}
+                    <div class="dark-card rounded-xl p-8 text-center">
+                        <i class="fas fa-question-circle text-4xl text-gray-600 mb-4"></i>
+                        <h3 class="text-xl font-semibold text-gray-300 mb-2">No questions yet</h3>
+                        <p class="text-gray-500 mb-4">Be the first to ask a question in the community!</p>
+                        {% if member %}
+                        <a href="{% url 'user:ask_question' %}" class="btn-primary inline-flex items-center">
+                            <i class="fas fa-plus mr-2"></i>
+                            Ask First Question
+                        </a>
+                        {% else %}
+                        <a href="{% url 'user:community_join' %}" class="btn-primary inline-flex items-center">
+                            <i class="fas fa-user-plus mr-2"></i>
+                            Join Community to Ask
+                        </a>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Pagination -->
+                {% if questions.has_other_pages %}
+                <div class="flex justify-center">
+                    <nav class="flex space-x-2">
+                        {% if questions.has_previous %}
+                        <a href="?page={{ questions.previous_page_number }}" 
+                           class="px-4 py-2 text-gray-400 hover:bg-slate-700 rounded-lg transition-colors">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                        {% endif %}
+
+                        {% for num in questions.paginator.page_range %}
+                            {% if questions.number == num %}
+                            <span class="px-4 py-2 bg-blue-600 text-white rounded-lg">{{ num }}</span>
+                            {% else %}
+                            <a href="?page={{ num }}" 
+                               class="px-4 py-2 text-gray-400 hover:bg-slate-700 rounded-lg transition-colors">
+                                {{ num }}
+                            </a>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if questions.has_next %}
+                        <a href="?page={{ questions.next_page_number }}" 
+                           class="px-4 py-2 text-gray-400 hover:bg-slate-700 rounded-lg transition-colors">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                        {% endif %}
+                    </nav>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Right Sidebar -->
+            <div class="lg:w-1/4 space-y-6">
+                <!-- User Profile Card -->
+                {% if member %}
+                <div class="dark-card rounded-xl p-6 text-center">
+                    <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl mx-auto mb-4">
+                        {{ member.name|first|upper }}
+                    </div>
+                    <h3 class="font-semibold text-white mb-1">{{ member.name }}</h3>
+                    <p class="text-sm text-gray-400 mb-3 capitalize">{{ member.membership_type|title }}</p>
+                    <div class="flex justify-center space-x-4 text-sm text-gray-400 mb-4">
+                        <div class="text-center">
+                            <div class="font-semibold text-white">{{ member.questions_asked }}</div>
+                            <div>Questions</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="font-semibold text-white">{{ member.answers_given }}</div>
+                            <div>Answers</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="font-semibold text-white">{{ member.reputation_score }}</div>
+                            <div>Reputation</div>
+                        </div>
+                    </div>
+                    <a href="{% url 'user:member_profile' member.user_id %}" 
+                       class="w-full bg-slate-700 hover:bg-slate-600 text-white py-2 px-4 rounded-lg text-sm font-medium transition-colors">
+                        View Profile
+                    </a>
+                </div>
+                {% endif %}
+
+                <!-- Popular Questions -->
+                <div class="dark-card rounded-xl p-4">
+                    <h3 class="font-semibold text-white mb-3 flex items-center">
+                        <i class="fas fa-chart-line text-purple-400 mr-2"></i>
+                        Popular This Week
+                    </h3>
+                    <div class="space-y-3">
+                        {% for question in questions|slice:":5" %}
+                        <a href="{% url 'user:question_detail' question.slug %}" 
+                           class="block text-sm text-gray-400 hover:text-blue-400 transition-colors group">
+                            <div class="font-medium text-white line-clamp-2 mb-1 group-hover:underline">
+                                {{ question.title }}
+                            </div>
+                            <div class="flex items-center space-x-2 text-xs">
+                                <span>{{ question.answers_count }} answers</span>
+                                <span>•</span>
+                                <span>{{ question.views }} views</span>
+                            </div>
+                        </a>
+                        {% empty %}
+                        <p class="text-sm text-gray-500">No popular questions yet</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Community Guidelines -->
+                <div class="dark-card rounded-xl p-4">
+                    <h3 class="font-semibold text-white mb-3 flex items-center">
+                        <i class="fas fa-gavel text-green-400 mr-2"></i>
+                        Community Guidelines
+                    </h3>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-400 mt-1 mr-2 text-xs"></i>
+                            Be respectful and inclusive
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-400 mt-1 mr-2 text-xs"></i>
+                            Share knowledge and expertise
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-400 mt-1 mr-2 text-xs"></i>
+                            Cite sources when possible
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-400 mt-1 mr-2 text-xs"></i>
+                            Keep discussions constructive
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

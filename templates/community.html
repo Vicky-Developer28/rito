@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="py-16 section-gradient">
+    <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-4xl font-bold mb-6 gradient-text text-center moon-walk">Join Our Community</h1>
+            <p class="text-lg text-gray-300 mb-8 text-center">
+                Become part of the movement to build India's sovereign digital future.
+            </p>
+            
+            <div class="dark-card p-8 rounded-xl mb-8">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label class="form-label">Full Name</label>
+                            {{ form.name }}
+                        </div>
+                        <div>
+                            <label class="form-label">Email Address</label>
+                            {{ form.email }}
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label class="form-label">Membership Type</label>
+                            {{ form.membership_type }}
+                        </div>
+                        <div>
+                            <label class="form-label">Organization (Optional)</label>
+                            {{ form.organization }}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="form-label">Areas of Interest or Expertise</label>
+                        {{ form.interests }}
+                    </div>
+                    
+                    <button type="submit" class="btn-primary w-full">Join Community</button>
+                </form>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                <div class="dark-card p-6 rounded-xl">
+                    <i class="fas fa-code text-blue-400 text-3xl mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2 moon-walk">Developers</h3>
+                    <p class="text-gray-400">Contribute to our open-source components</p>
+                </div>
+                <div class="dark-card p-6 rounded-xl">
+                    <i class="fas fa-search text-green-400 text-3xl mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2 moon-walk">Researchers</h3>
+                    <p class="text-gray-400">Help advance digital sovereignty research</p>
+                </div>
+                <div class="dark-card p-6 rounded-xl">
+                    <i class="fas fa-users text-purple-400 text-3xl mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2 moon-walk">Advocates</h3>
+                    <p class="text-gray-400">Spread awareness about digital sovereignty</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

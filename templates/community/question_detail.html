@@ -1,0 +1,325 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ question.title }} - Rito Community{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 dark:bg-slate-900 py-8">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Question -->
+        <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-slate-700 mb-6">
+            <!-- Question Header -->
+            <div class="flex items-start justify-between mb-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold shadow-sm">
+                        {{ question.author.name|first|upper }}
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">
+                            {% if question.is_anonymous %}
+                            <i class="fas fa-user-secret mr-1"></i>Anonymous
+                            {% else %}
+                            <a href="{% url 'user:member_profile' question.author.user_id %}" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                                {{ question.author.name }}
+                            </a>
+                            {% endif %}
+                            • <span class="text-xs">{{ question.created_at|timesince }} ago</span>
+                        </p>
+                        <p class="text-xs text-gray-500 dark:text-gray-500 capitalize">
+                            {{ question.author.membership_type|title }}
+                        </p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <span class="text-sm text-gray-500 dark:text-gray-400">
+                        <i class="far fa-eye mr-1"></i>{{ question.views }} views
+                    </span>
+                    <button class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors">
+                        <i class="fas fa-ellipsis-h"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Question Content -->
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">{{ question.title }}</h1>
+            
+            {% if question.content %}
+            <div class="prose dark:prose-invert max-w-none mb-6">
+                <p class="text-gray-700 dark:text-gray-300 leading-relaxed">{{ question.content|linebreaks }}</p>
+            </div>
+            {% endif %}
+
+            <!-- Topics -->
+            <div class="flex flex-wrap gap-2 mb-4">
+                {% for topic in question.topics.all %}
+                <a href="{% url 'user:topic_detail' topic.slug %}" 
+                   class="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded-full text-xs font-medium hover:bg-blue-200 dark:hover:bg-blue-800/50 transition-colors">
+                    #{{ topic.name }}
+                </a>
+                {% endfor %}
+            </div>
+
+            <!-- Engagement Stats -->
+            <div class="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-slate-700">
+                <div class="flex items-center space-x-6 text-sm text-gray-500 dark:text-gray-400">
+                    <button class="flex items-center space-x-1 hover:text-blue-600 dark:hover:text-blue-400 transition-colors vote-btn" data-question-id="{{ question.id }}" data-vote-type="upvote">
+                        <i class="far fa-thumbs-up"></i>
+                        <span>{{ question.upvotes.count }}</span>
+                    </button>
+                    <button class="flex items-center space-x-1 hover:text-red-600 dark:hover:text-red-400 transition-colors vote-btn" data-question-id="{{ question.id }}" data-vote-type="downvote">
+                        <i class="far fa-thumbs-down"></i>
+                        <span>{{ question.downvotes.count }}</span>
+                    </button>
+                    <button class="flex items-center space-x-1 hover:text-green-600 dark:hover:text-green-400 transition-colors follow-btn" data-question-id="{{ question.id }}">
+                        <i class="far fa-bell"></i>
+                        <span>Follow</span>
+                    </button>
+                    <button class="flex items-center space-x-1 hover:text-purple-600 dark:hover:text-purple-400 transition-colors bookmark-btn" data-question-id="{{ question.id }}">
+                        <i class="{% if is_bookmarked %}fas{% else %}far{% endif %} fa-bookmark"></i>
+                        <span>Bookmark</span>
+                    </button>
+                </div>
+                <button class="flex items-center space-x-1 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
+                    <i class="far fa-share-square"></i>
+                    <span>Share</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Answers Section -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
+                    {{ answers.count }} Answer{{ answers.count|pluralize }}
+                </h2>
+                <div class="flex space-x-2 text-sm">
+                    <button class="px-3 py-1 bg-blue-600 text-white rounded-lg">Newest</button>
+                    <button class="px-3 py-1 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors">Votes</button>
+                </div>
+            </div>
+
+            <!-- Answers List -->
+            <div class="space-y-6">
+                {% for answer in answers %}
+                <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-slate-700 {% if answer.is_accepted %}border-2 border-green-500{% endif %}">
+                    {% if answer.is_accepted %}
+                    <div class="flex items-center text-green-600 dark:text-green-400 mb-3">
+                        <i class="fas fa-check-circle mr-2"></i>
+                        <span class="font-medium">Accepted Answer</span>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Answer Header -->
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-gradient-to-r from-green-500 to-blue-600 rounded-full flex items-center justify-center text-white font-semibold text-sm shadow-sm">
+                                {{ answer.author.name|first|upper }}
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">
+                                    {% if answer.is_anonymous %}
+                                    <i class="fas fa-user-secret mr-1"></i>Anonymous
+                                    {% else %}
+                                    <a href="{% url 'user:member_profile' answer.author.user_id %}" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                                        {{ answer.author.name }}
+                                    </a>
+                                    {% endif %}
+                                    • <span class="text-xs">{{ answer.created_at|timesince }} ago</span>
+                                </p>
+                                <p class="text-xs text-gray-500 dark:text-gray-500 capitalize">
+                                    {{ answer.author.membership_type|title }}
+                                </p>
+                            </div>
+                        </div>
+                        {% if question.author == member and not answer.is_accepted %}
+                        <button class="text-sm text-gray-500 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400 transition-colors accept-answer-btn" data-answer-id="{{ answer.id }}">
+                            <i class="far fa-check-circle mr-1"></i>Accept
+                        </button>
+                        {% endif %}
+                    </div>
+
+                    <!-- Answer Content -->
+                    <div class="prose dark:prose-invert max-w-none mb-4">
+                        <p class="text-gray-700 dark:text-gray-300 leading-relaxed">{{ answer.content|linebreaks }}</p>
+                    </div>
+
+                    <!-- Answer Engagement -->
+                    <div class="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-slate-700">
+                        <div class="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
+                            <button class="flex items-center space-x-1 hover:text-blue-600 dark:hover:text-blue-400 transition-colors answer-vote-btn" data-answer-id="{{ answer.id }}" data-vote-type="upvote">
+                                <i class="far fa-thumbs-up"></i>
+                                <span>{{ answer.upvotes.count }}</span>
+                            </button>
+                            <button class="flex items-center space-x-1 hover:text-red-600 dark:hover:text-red-400 transition-colors answer-vote-btn" data-answer-id="{{ answer.id }}" data-vote-type="downvote">
+                                <i class="far fa-thumbs-down"></i>
+                                <span>{{ answer.downvotes.count }}</span>
+                            </button>
+                            <button class="flex items-center space-x-1 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+                                <i class="far fa-comment"></i>
+                                <span>Comment</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="bg-white dark:bg-slate-800 rounded-xl p-8 text-center shadow-sm border border-gray-200 dark:border-slate-700">
+                    <i class="fas fa-comment-slash text-4xl text-gray-400 mb-4"></i>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">No answers yet</h3>
+                    <p class="text-gray-600 dark:text-gray-400 mb-4">Be the first to answer this question!</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Your Answer -->
+        <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-slate-700">
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Your Answer</h3>
+            <form method="post" action="{% url 'user:post_answer' question.slug %}">
+                {% csrf_token %}
+                <div class="mb-4">
+                    {{ answer_form.content }}
+                </div>
+                <div class="flex items-center justify-between">
+                    <label class="flex items-center space-x-3">
+                        {{ answer_form.is_anonymous }}
+                        <span class="text-sm text-gray-700 dark:text-gray-300">Post anonymously</span>
+                    </label>
+                    <button type="submit" 
+                            class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors shadow-sm flex items-center">
+                        <i class="fas fa-paper-plane mr-2"></i>
+                        Post Answer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Question voting
+        document.querySelectorAll('.vote-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const questionId = this.dataset.questionId;
+                const voteType = this.dataset.voteType;
+                voteQuestion(questionId, voteType);
+            });
+        });
+
+        // Answer voting
+        document.querySelectorAll('.answer-vote-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const answerId = this.dataset.answerId;
+                const voteType = this.dataset.voteType;
+                voteAnswer(answerId, voteType);
+            });
+        });
+
+        // Accept answer
+        document.querySelectorAll('.accept-answer-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const answerId = this.dataset.answerId;
+                acceptAnswer(answerId);
+            });
+        });
+
+        // Bookmark
+        document.querySelectorAll('.bookmark-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const questionId = this.dataset.questionId;
+                bookmarkQuestion(questionId);
+            });
+        });
+    });
+
+    function voteQuestion(questionId, voteType) {
+        fetch(`/community/question/${questionId}/vote/${voteType}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            }
+        });
+    }
+
+    function voteAnswer(answerId, voteType) {
+        fetch(`/community/answer/${answerId}/vote/${voteType}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            }
+        });
+    }
+
+    function acceptAnswer(answerId) {
+        fetch(`/community/answer/${answerId}/accept/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            }
+        });
+    }
+
+    function bookmarkQuestion(questionId) {
+        fetch(`/community/question/${questionId}/bookmark/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const bookmarkIcon = document.querySelector(`[data-question-id="${questionId}"] i`);
+                if (data.bookmarked) {
+                    bookmarkIcon.classList.remove('far');
+                    bookmarkIcon.classList.add('fas');
+                    bookmarkIcon.style.color = '#3b82f6';
+                } else {
+                    bookmarkIcon.classList.remove('fas');
+                    bookmarkIcon.classList.add('far');
+                    bookmarkIcon.style.color = '';
+                }
+            }
+        });
+    }
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
+{% endblock %}

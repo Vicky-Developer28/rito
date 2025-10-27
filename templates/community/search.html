@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Search - Rito Community{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 dark:bg-slate-900 py-8">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="mb-8 text-center">
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Search Community</h1>
+            <p class="text-gray-600 dark:text-gray-400">Find questions, answers, and topics</p>
+        </div>
+
+        <!-- Search Form -->
+        <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-slate-700 mb-6">
+            <form method="get" action="{% url 'user:search' %}" class="relative">
+                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                <input type="text" 
+                       name="q"
+                       value="{{ query }}"
+                       placeholder="Search for questions, topics, or members..." 
+                       class="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-800 text-gray-900 dark:text-white">
+                <button type="submit" class="absolute right-3 top-1/2 transform -translate-y-1/2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
+                    Search
+                </button>
+            </form>
+        </div>
+
+        <!-- Search Results -->
+        {% if query %}
+        <div class="mb-6">
+            <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                Search Results for "{{ query }}"
+                <span class="text-sm text-gray-500 dark:text-gray-400 font-normal">({{ results|length }} found)</span>
+            </h2>
+
+            {% if results %}
+            <div class="space-y-4">
+                {% for question in results %}
+                <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-slate-700 hover:shadow-md transition-shadow">
+                    <!-- Question Header -->
+                    <div class="flex items-start justify-between mb-3">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-sm shadow-sm">
+                                {{ question.author.name|first|upper }}
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">
+                                    {% if question.is_anonymous %}
+                                    <i class="fas fa-user-secret mr-1"></i>Anonymous
+                                    {% else %}
+                                    {{ question.author.name }}
+                                    {% endif %}
+                                    • <span class="text-xs">{{ question.created_at|timesince }} ago</span>
+                                </p>
+                                <p class="text-xs text-gray-500 dark:text-gray-500 capitalize">
+                                    {{ question.author.membership_type|title }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Question Content -->
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                        <a href="{% url 'user:question_detail' question.slug %}" class="hover:underline">
+                            {{ question.title }}
+                        </a>
+                    </h3>
+                    
+                    {% if question.content %}
+                    <p class="text-gray-600 dark:text-gray-300 mb-4 line-clamp-2">{{ question.content|truncatewords:30 }}</p>
+                    {% endif %}
+
+                    <!-- Topics -->
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        {% for topic in question.topics.all %}
+                        <span class="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded-full text-xs font-medium">
+                            #{{ topic.name }}
+                        </span>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Engagement Stats -->
+                    <div class="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+                        <div class="flex items-center space-x-4">
+                            <span class="flex items-center space-x-1">
+                                <i class="far fa-thumbs-up"></i>
+                                <span>{{ question.upvotes.count }}</span>
+                            </span>
+                            <span class="flex items-center space-x-1">
+                                <i class="far fa-comment"></i>
+                                <span>{{ question.answers_count }} answers</span>
+                            </span>
+                            <span class="flex items-center space-x-1">
+                                <i class="far fa-eye"></i>
+                                <span>{{ question.views }} views</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-8 text-center shadow-sm border border-gray-200 dark:border-slate-700">
+                <i class="fas fa-search text-4xl text-gray-400 mb-4"></i>
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">No results found</h3>
+                <p class="text-gray-600 dark:text-gray-400 mb-4">Try different keywords or browse our topics.</p>
+                <a href="{% url 'user:topics' %}" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg inline-flex items-center transition-colors shadow-sm">
+                    <i class="fas fa-tags mr-2"></i>
+                    Browse Topics
+                </a>
+            </div>
+            {% endif %}
+        </div>
+        {% else %}
+        <!-- Popular Searches -->
+        <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-slate-700">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Popular Searches</h3>
+            <div class="flex flex-wrap gap-2">
+                <a href="?q=digital+sovereignty" class="px-4 py-2 bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors text-sm">
+                    Digital Sovereignty
+                </a>
+                <a href="?q=hardware+security" class="px-4 py-2 bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors text-sm">
+                    Hardware Security
+                </a>
+                <a href="?q=zero+knowledge+proofs" class="px-4 py-2 bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors text-sm">
+                    Zero Knowledge Proofs
+                </a>
+                <a href="?q=blockchain+identity" class="px-4 py-2 bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors text-sm">
+                    Blockchain Identity
+                </a>
+                <a href="?q=privacy+technology" class="px-4 py-2 bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors text-sm">
+                    Privacy Technology
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+</style>
+{% endblock %}

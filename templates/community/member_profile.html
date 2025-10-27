@@ -1,0 +1,192 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ profile_member.name }} - Rito Community{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 dark:bg-slate-900 py-8">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Profile Header -->
+        <div class="bg-white dark:bg-slate-800 rounded-xl p-8 shadow-sm border border-gray-200 dark:border-slate-700 mb-6">
+            <div class="flex flex-col md:flex-row items-center md:items-start space-y-6 md:space-y-0 md:space-x-8">
+                <!-- Avatar -->
+                <div class="w-24 h-24 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-2xl shadow-lg">
+                    {{ profile_member.name|first|upper }}
+                </div>
+                
+                <!-- Profile Info -->
+                <div class="flex-1 text-center md:text-left">
+                    <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">{{ profile_member.name }}</h1>
+                    <p class="text-lg text-gray-600 dark:text-gray-400 mb-3 capitalize">{{ profile_member.membership_type|title }}</p>
+                    
+                    {% if profile_member.organization %}
+                    <p class="text-gray-600 dark:text-gray-400 mb-2">
+                        <i class="fas fa-building mr-2"></i>{{ profile_member.organization }}
+                    </p>
+                    {% endif %}
+                    
+                    {% if profile_member.location %}
+                    <p class="text-gray-600 dark:text-gray-400 mb-4">
+                        <i class="fas fa-map-marker-alt mr-2"></i>{{ profile_member.location }}
+                    </p>
+                    {% endif %}
+                    
+                    {% if profile_member.bio %}
+                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed">{{ profile_member.bio }}</p>
+                    {% endif %}
+                    
+                    <!-- Social Links -->
+                    <div class="flex justify-center md:justify-start space-x-4 mt-4">
+                        {% if profile_member.website %}
+                        <a href="{{ profile_member.website }}" target="_blank" class="text-gray-400 hover:text-blue-600 transition-colors">
+                            <i class="fas fa-globe text-lg"></i>
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Stats -->
+                <div class="bg-gray-50 dark:bg-slate-700 rounded-lg p-6 min-w-[200px]">
+                    <div class="grid grid-cols-2 gap-4 text-center">
+                        <div>
+                            <div class="text-2xl font-bold text-gray-900 dark:text-white">{{ profile_member.questions_asked }}</div>
+                            <div class="text-sm text-gray-500 dark:text-gray-400">Questions</div>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold text-gray-900 dark:text-white">{{ profile_member.answers_given }}</div>
+                            <div class="text-sm text-gray-500 dark:text-gray-400">Answers</div>
+                        </div>
+                        <div class="col-span-2">
+                            <div class="text-2xl font-bold text-gray-900 dark:text-white">{{ profile_member.reputation_score }}</div>
+                            <div class="text-sm text-gray-500 dark:text-gray-400">Reputation</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Tabs -->
+        <div class="flex space-x-1 bg-white dark:bg-slate-800 rounded-t-xl p-1 border-b border-gray-200 dark:border-slate-700">
+            <button class="tab-button active px-4 py-2 text-sm font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 rounded-lg transition-colors" data-tab="questions">
+                Questions ({{ questions|length }})
+            </button>
+            <button class="tab-button px-4 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 rounded-lg transition-colors" data-tab="answers">
+                Answers ({{ answers|length }})
+            </button>
+        </div>
+
+        <!-- Questions Tab -->
+        <div id="questions-tab" class="tab-content active">
+            <div class="space-y-4">
+                {% for question in questions %}
+                <div class="bg-white dark:bg-slate-800 rounded-b-xl p-6 shadow-sm border border-gray-200 dark:border-slate-700 border-t-0">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                        <a href="{% url 'user:question_detail' question.slug %}" class="hover:underline">
+                            {{ question.title }}
+                        </a>
+                    </h3>
+                    
+                    {% if question.content %}
+                    <p class="text-gray-600 dark:text-gray-300 mb-3 line-clamp-2">{{ question.content|truncatewords:30 }}</p>
+                    {% endif %}
+                    
+                    <div class="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+                        <div class="flex items-center space-x-4">
+                            <span>{{ question.created_at|timesince }} ago</span>
+                            <span>•</span>
+                            <span>{{ question.answers_count }} answers</span>
+                            <span>•</span>
+                            <span>{{ question.views }} views</span>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            <span class="text-blue-600 dark:text-blue-400">{{ question.vote_count }}</span>
+                            <i class="fas fa-arrow-up text-blue-600 dark:text-blue-400"></i>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="bg-white dark:bg-slate-800 rounded-b-xl p-8 text-center shadow-sm border border-gray-200 dark:border-slate-700 border-t-0">
+                    <i class="fas fa-question-circle text-4xl text-gray-400 mb-4"></i>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">No questions yet</h3>
+                    <p class="text-gray-600 dark:text-gray-400">This member hasn't asked any questions yet.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Answers Tab -->
+        <div id="answers-tab" class="tab-content hidden">
+            <div class="space-y-4">
+                {% for answer in answers %}
+                <div class="bg-white dark:bg-slate-800 rounded-b-xl p-6 shadow-sm border border-gray-200 dark:border-slate-700 border-t-0">
+                    <div class="flex items-start space-x-3 mb-3">
+                        <div class="flex-1">
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                                <a href="{% url 'user:question_detail' answer.question.slug %}" class="hover:underline">
+                                    {{ answer.question.title }}
+                                </a>
+                            </h3>
+                            
+                            <p class="text-gray-600 dark:text-gray-300 mb-3 line-clamp-2">{{ answer.content|truncatewords:30 }}</p>
+                            
+                            <div class="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+                                <div class="flex items-center space-x-4">
+                                    <span>{{ answer.created_at|timesince }} ago</span>
+                                    <span>•</span>
+                                    {% if answer.is_accepted %}
+                                    <span class="text-green-600 dark:text-green-400 flex items-center">
+                                        <i class="fas fa-check-circle mr-1"></i>Accepted
+                                    </span>
+                                    {% endif %}
+                                </div>
+                                <div class="flex items-center space-x-1">
+                                    <span class="text-blue-600 dark:text-blue-400">{{ answer.vote_count }}</span>
+                                    <i class="fas fa-arrow-up text-blue-600 dark:text-blue-400"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="bg-white dark:bg-slate-800 rounded-b-xl p-8 text-center shadow-sm border border-gray-200 dark:border-slate-700 border-t-0">
+                    <i class="fas fa-comment-slash text-4xl text-gray-400 mb-4"></i>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">No answers yet</h3>
+                    <p class="text-gray-600 dark:text-gray-400">This member hasn't answered any questions yet.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Tab functionality
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all buttons and contents
+                document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active', 'text-blue-600', 'dark:text-blue-400', 'bg-blue-50', 'dark:bg-blue-900/30'));
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
+                
+                // Add active class to clicked button
+                this.classList.add('active', 'text-blue-600', 'dark:text-blue-400', 'bg-blue-50', 'dark:bg-blue-900/30');
+                
+                // Show corresponding content
+                const tabId = this.dataset.tab + '-tab';
+                document.getElementById(tabId).classList.remove('hidden');
+            });
+        });
+    });
+</script>
+
+<style>
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+</style>
+{% endblock %}

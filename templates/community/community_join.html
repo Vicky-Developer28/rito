@@ -1,0 +1,250 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="py-16 section-gradient">
+    <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-4xl font-bold mb-6 gradient-text text-center moon-walk">Join Our Community</h1>
+            <p class="text-lg text-gray-300 mb-8 text-center">
+                Become part of the movement to build India's sovereign digital future.
+            </p>
+            
+            <div class="dark-card p-8 rounded-xl mb-8">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label class="form-label">Full Name</label>
+                            {{ form.name }}
+                        </div>
+                        <div>
+                            <label class="form-label">Email Address</label>
+                            {{ form.email }}
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label class="form-label">Membership Type</label>
+                            {{ form.membership_type }}
+                        </div>
+                        <div>
+                            <label class="form-label">Organization (Optional)</label>
+                            {{ form.organization }}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="form-label">Areas of Interest or Expertise</label>
+                        {{ form.interests }}
+                    </div>
+                    
+                    <button type="submit" class="btn-primary w-full">Join Community</button>
+                </form>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center mb-12">
+                <div class="dark-card p-6 rounded-xl">
+                    <i class="fas fa-code text-blue-400 text-3xl mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2 moon-walk">Developers</h3>
+                    <p class="text-gray-400">Contribute to our open-source components</p>
+                </div>
+                <div class="dark-card p-6 rounded-xl">
+                    <i class="fas fa-search text-green-400 text-3xl mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2 moon-walk">Researchers</h3>
+                    <p class="text-gray-400">Help advance digital sovereignty research</p>
+                </div>
+                <div class="dark-card p-6 rounded-xl">
+                    <i class="fas fa-users text-purple-400 text-3xl mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2 moon-walk">Advocates</h3>
+                    <p class="text-gray-400">Spread awareness about digital sovereignty</p>
+                </div>
+            </div>
+            
+            <!-- Popular Questions Section -->
+            <div class="mb-12">
+                <h2 class="text-3xl font-bold mb-6 gradient-text text-center moon-walk">Popular Questions</h2>
+                <div class="space-y-6">
+                    {% for question in popular_questions %}
+                    <div class="dark-card p-6 rounded-xl">
+                        <div class="flex items-start justify-between mb-4">
+                            <h3 class="text-xl font-bold text-white">
+                                <a href="{% url 'user:question_detail' slug=question.slug %}" class="hover:text-blue-400 transition">
+                                    {{ question.title }}
+                                </a>
+                            </h3>
+                            <div class="flex items-center space-x-2 text-sm text-gray-400">
+                                <i class="fas fa-arrow-up text-green-400"></i>
+                                <span>{{ question.vote_count }}</span>
+                                <i class="fas fa-comment text-blue-400 ml-2"></i>
+                                <span>{{ question.answers_count }}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            {% for topic in question.topics.all %}
+                            <span class="px-2 py-1 bg-blue-900 bg-opacity-50 text-blue-300 text-xs rounded-full">
+                                {{ topic.name }}
+                            </span>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="text-gray-300 mb-4">
+                            {{ question.content|truncatewords:30 }}
+                        </div>
+                        
+                        <div class="flex items-center justify-between text-sm text-gray-400">
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center mr-2">
+                                    <span class="text-white text-xs font-bold">
+                                        {% if question.author.profile_picture %}
+                                            <img src="{{ question.author.profile_picture.url }}" alt="{{ question.author.name }}" class="w-full h-full rounded-full object-cover">
+                                        {% else %}
+                                            {{ question.author.name|first|upper }}
+                                        {% endif %}
+                                    </span>
+                                </div>
+                                <span>
+                                    {% if question.is_anonymous %}Anonymous{% else %}{{ question.author.name }}{% endif %}
+                                </span>
+                            </div>
+                            <span>{{ question.created_at|timesince }} ago</span>
+                        </div>
+                        
+                        {% if question.answers.all %}
+                        <div class="mt-4 pt-4 border-t border-gray-700">
+                            <h4 class="text-sm font-semibold text-gray-400 mb-2">Top Answer</h4>
+                            {% with top_answer=question.answers.all|dictsortreversed:"vote_count"|first %}
+                            <div class="bg-gray-800 bg-opacity-50 p-4 rounded-lg">
+                                <div class="text-gray-300 mb-2">
+                                    {{ top_answer.content|truncatewords:20 }}
+                                </div>
+                                <div class="flex items-center justify-between text-xs text-gray-400">
+                                    <div class="flex items-center">
+                                        <div class="w-6 h-6 rounded-full bg-gradient-to-r from-green-500 to-blue-500 flex items-center justify-center mr-1">
+                                            <span class="text-white text-xs font-bold">
+                                                {% if top_answer.author.profile_picture %}
+                                                    <img src="{{ top_answer.author.profile_picture.url }}" alt="{{ top_answer.author.name }}" class="w-full h-full rounded-full object-cover">
+                                                {% else %}
+                                                    {{ top_answer.author.name|first|upper }}
+                                                {% endif %}
+                                            </span>
+                                        </div>
+                                        <span>
+                                            {% if top_answer.is_anonymous %}Anonymous{% else %}{{ top_answer.author.name }}{% endif %}
+                                        </span>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <span>{{ top_answer.created_at|timesince }} ago</span>
+                                        {% if top_answer.is_accepted %}
+                                        <span class="px-2 py-1 bg-green-900 bg-opacity-50 text-green-300 rounded-full text-xs">
+                                            <i class="fas fa-check mr-1"></i>Accepted
+                                        </span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endwith %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <!-- Recent Questions Section -->
+            <div class="mb-12">
+                <h2 class="text-3xl font-bold mb-6 gradient-text text-center moon-walk">Recent Questions</h2>
+                <div class="space-y-6">
+                    {% for question in recent_questions %}
+                    <div class="dark-card p-6 rounded-xl">
+                        <div class="flex items-start justify-between mb-4">
+                            <h3 class="text-xl font-bold text-white">
+                                <a href="{% url 'user:question_detail' slug=question.slug %}" class="hover:text-blue-400 transition">
+                                    {{ question.title }}
+                                </a>
+                            </h3>
+                            <div class="flex items-center space-x-2 text-sm text-gray-400">
+                                <i class="fas fa-arrow-up text-green-400"></i>
+                                <span>{{ question.vote_count }}</span>
+                                <i class="fas fa-comment text-blue-400 ml-2"></i>
+                                <span>{{ question.answers_count }}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            {% for topic in question.topics.all %}
+                            <span class="px-2 py-1 bg-blue-900 bg-opacity-50 text-blue-300 text-xs rounded-full">
+                                {{ topic.name }}
+                            </span>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="text-gray-300 mb-4">
+                            {{ question.content|truncatewords:30 }}
+                        </div>
+                        
+                        <div class="flex items-center justify-between text-sm text-gray-400">
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center mr-2">
+                                    <span class="text-white text-xs font-bold">
+                                        {% if question.author.profile_picture %}
+                                            <img src="{{ question.author.profile_picture.url }}" alt="{{ question.author.name }}" class="w-full h-full rounded-full object-cover">
+                                        {% else %}
+                                            {{ question.author.name|first|upper }}
+                                        {% endif %}
+                                    </span>
+                                </div>
+                                <span>
+                                    {% if question.is_anonymous %}Anonymous{% else %}{{ question.author.name }}{% endif %}
+                                </span>
+                            </div>
+                            <span>{{ question.created_at|timesince }} ago</span>
+                        </div>
+                        
+                        {% if question.answers.all %}
+                        <div class="mt-4 pt-4 border-t border-gray-700">
+                            <h4 class="text-sm font-semibold text-gray-400 mb-2">Latest Answer</h4>
+                            {% with latest_answer=question.answers.all|dictsortreversed:"created_at"|first %}
+                            <div class="bg-gray-800 bg-opacity-50 p-4 rounded-lg">
+                                <div class="text-gray-300 mb-2">
+                                    {{ latest_answer.content|truncatewords:20 }}
+                                </div>
+                                <div class="flex items-center justify-between text-xs text-gray-400">
+                                    <div class="flex items-center">
+                                        <div class="w-6 h-6 rounded-full bg-gradient-to-r from-green-500 to-blue-500 flex items-center justify-center mr-1">
+                                            <span class="text-white text-xs font-bold">
+                                                {% if latest_answer.author.profile_picture %}
+                                                    <img src="{{ latest_answer.author.profile_picture.url }}" alt="{{ latest_answer.author.name }}" class="w-full h-full rounded-full object-cover">
+                                                {% else %}
+                                                    {{ latest_answer.author.name|first|upper }}
+                                                {% endif %}
+                                            </span>
+                                        </div>
+                                        <span>
+                                            {% if latest_answer.is_anonymous %}Anonymous{% else %}{{ latest_answer.author.name }}{% endif %}
+                                        </span>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <span>{{ latest_answer.created_at|timesince }} ago</span>
+                                        {% if latest_answer.is_accepted %}
+                                        <span class="px-2 py-1 bg-green-900 bg-opacity-50 text-green-300 rounded-full text-xs">
+                                            <i class="fas fa-check mr-1"></i>Accepted
+                                        </span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endwith %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</section>
+{% endblock %}

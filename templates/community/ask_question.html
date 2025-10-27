@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Ask a Question - Rito Community{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 dark:bg-slate-900 py-8">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="mb-8 text-center">
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Ask a Question</h1>
+            <p class="text-gray-600 dark:text-gray-400">Share your knowledge and get help from the community</p>
+        </div>
+
+        <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-slate-700">
+            <form method="post">
+                {% csrf_token %}
+                
+                <!-- Title -->
+                <div class="mb-6">
+                    <label for="{{ form.title.id_for_label }}" class="form-label">Question Title</label>
+                    {{ form.title }}
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Be specific and imagine you're asking a question to another person</p>
+                </div>
+
+                <!-- Content -->
+                <div class="mb-6">
+                    <label for="{{ form.content.id_for_label }}" class="form-label">Details</label>
+                    {{ form.content }}
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Include all the information someone would need to answer your question</p>
+                </div>
+
+                <!-- Topics -->
+                <div class="mb-6">
+                    <label class="form-label">Topics</label>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-2">
+                        {% for topic in form.topics.field.queryset %}
+                        <label class="flex items-center space-x-2 p-3 border border-gray-200 dark:border-slate-600 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 cursor-pointer transition-colors">
+                            <input type="checkbox" name="topics" value="{{ topic.id }}" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span class="text-sm text-gray-700 dark:text-gray-300">#{{ topic.name }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Anonymous -->
+                <div class="mb-6">
+                    <label class="flex items-center space-x-3">
+                        {{ form.is_anonymous }}
+                        <span class="text-sm text-gray-700 dark:text-gray-300">Post anonymously</span>
+                    </label>
+                </div>
+
+                <!-- Buttons -->
+                <div class="flex space-x-4">
+                    <a href="{% url 'user:community' %}" 
+                       class="px-6 py-3 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors font-medium">
+                        Cancel
+                    </a>
+                    <button type="submit" 
+                            class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors shadow-sm flex items-center">
+                        <i class="fas fa-paper-plane mr-2"></i>
+                        Post Question
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Tips -->
+        <div class="mt-8 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-6">
+            <h3 class="font-semibold text-blue-900 dark:text-blue-100 mb-3 flex items-center">
+                <i class="fas fa-lightbulb text-blue-500 mr-2"></i>
+                Writing a good question
+            </h3>
+            <ul class="space-y-2 text-sm text-blue-800 dark:text-blue-200">
+                <li class="flex items-start">
+                    <i class="fas fa-check text-green-500 mt-1 mr-2 text-xs"></i>
+                    Summarize the problem in the title
+                </li>
+                <li class="flex items-start">
+                    <i class="fas fa-check text-green-500 mt-1 mr-2 text-xs"></i>
+                    Describe what you've tried and what you're expecting
+                </li>
+                <li class="flex items-start">
+                    <i class="fas fa-check text-green-500 mt-1 mr-2 text-xs"></i>
+                    Add relevant topics to reach the right audience
+                </li>
+                <li class="flex items-start">
+                    <i class="fas fa-check text-green-500 mt-1 mr-2 text-xs"></i>
+                    Be clear and concise in your description
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,689 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block content %}
+
+    <!-- Hero Section -->
+    <section class="hero-gradient text-white py-20 relative">
+        <div class="container mx-auto px-4 my-20">
+            <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover">
+                <source src="{% static 'videos/bg-video-3.mp4' %}" type="video/mp4">
+            </video>
+
+            <!-- 🔲 Overlay (optional for dark shade) -->
+            <div class="absolute inset-0 video-gradient "></div>
+            
+            <div class="max-w-4xl mx-auto text-center relative z-10">
+                <h1 class="text-4xl md:text-6xl font-bold mb-6 moon-walk-glow font-WalkMoon">Forging a Sovereign Digital Identity</h1>
+                <p class="text-xl md:text-2xl mb-8 opacity-90">A Secure, Privacy-Centric, and Accountable Digital Ecosystem for 1.4 Billion Citizens</p>
+                <p class="text-2xl font-semibold mb-10 moon-walk-gradient">A Chain of Trust</p>
+                <div class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-6">
+                    <a href="#overview" class="bg-slate-800 text-blue-400 font-semibold py-3 px-8 rounded-lg shadow-lg hover:bg-slate-700 transition duration-300 border border-slate-600">Learn More</a>
+                    <a href="{% url 'user:community' %}" class="bg-transparent border-2 border-blue-400 text-blue-400 font-semibold py-3 px-8 rounded-lg hover:bg-blue-400 hover:text-slate-900 transition duration-300">Join Community</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Disclaimer Section -->
+    <section class="bg-slate-800 py-6 border-b border-slate-700">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto text-center">
+                <p class="text-yellow-400 text-sm md:text-base">
+                    <strong class="text-red-600">Disclaimer:</strong> This project documentation is a conceptual submission for the "Viksit Bharat Buildathon 2025" only. 
+                    <br>It is NOT an approved government project, policy document, or official government initiative.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Aegis Innovative Section -->
+    <section id="about" class="py-16 section-gradient">
+        <div class="container mx-auto px-4">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-6 gradient-text moon-walk">About Aegis Innovative</h2>
+                    <p class="text-lg text-gray-300 max-w-3xl mx-auto">
+                        Aegis Innovative is a forward-thinking technology company dedicated to creating sovereign digital solutions 
+                        that empower nations and protect citizens in the digital age.
+                    </p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                    <div class="dark-card p-8 rounded-xl shadow-lg dark-card-hover">
+                        <div class="w-16 h-16 bg-blue-900 rounded-full flex items-center justify-center mb-6">
+                            <i class="fas fa-bullseye text-blue-400 text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4 text-gray-100 moon-walk">Our Mission</h3>
+                        <p class="text-gray-300 mb-4">
+                            To design and implement sovereign digital infrastructure that ensures security, privacy, and accountability 
+                            while fostering innovation and economic growth.
+                        </p>
+                        <p class="text-gray-300">
+                            We believe that nations should have control over their digital destiny, from the silicon in their devices 
+                            to the software that powers their services.
+                        </p>
+                    </div>
+                    
+                    <div class="dark-card p-8 rounded-xl shadow-lg dark-card-hover">
+                        <div class="w-16 h-16 bg-green-900 rounded-full flex items-center justify-center mb-6">
+                            <i class="fas fa-eye text-green-400 text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4 text-gray-100 moon-walk">Our Vision</h3>
+                        <p class="text-gray-300 mb-4">
+                            A world where every nation can harness the power of digital technology without compromising 
+                            sovereignty, security, or citizen rights.
+                        </p>
+                        <p class="text-gray-300">
+                            We envision a future where digital infrastructure serves the people, protects their privacy, 
+                            and enables innovation within a framework of trust and accountability.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="dark-card p-8 rounded-xl">
+                    <h3 class="text-2xl font-bold mb-6 text-center text-blue-400 moon-walk">Our Core Values</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="text-center">
+                            <div class="w-20 h-20 bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-shield-alt text-blue-400 text-2xl"></i>
+                            </div>
+                            <h4 class="text-lg font-bold mb-2 text-gray-100 moon-walk">Security First</h4>
+                            <p class="text-gray-400">
+                                We prioritize security in every aspect of our solutions, from hardware to application layers.
+                            </p>
+                        </div>
+                        
+                        <div class="text-center">
+                            <div class="w-20 h-20 bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-user-shield text-purple-400 text-2xl"></i>
+                            </div>
+                            <h4 class="text-lg font-bold mb-2 text-gray-100 moon-walk">Privacy by Design</h4>
+                            <p class="text-gray-400">
+                                Privacy is not an afterthought but a fundamental principle embedded in our architecture.
+                            </p>
+                        </div>
+                        
+                        <div class="text-center">
+                            <div class="w-20 h-20 bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-handshake text-green-400 text-2xl"></i>
+                            </div>
+                            <h4 class="text-lg font-bold mb-2 text-gray-100 moon-walk">Accountability</h4>
+                            <p class="text-gray-400">
+                                We believe in creating systems where actions are traceable and responsibility is clear.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Overview Section -->
+    <section id="overview" class="py-16 section-gradient">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6 gradient-text moon-walk">Project Overview & Vision</h2>
+                <p class="text-lg text-gray-300 mb-8">
+                    India stands at a pivotal moment in its digital transformation. With over <strong>954.40 million internet users</strong>, 
+                    the digital economy is a primary engine of growth and innovation. However, this rapid expansion has occurred on a 
+                    foundation built and controlled by foreign entities.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+                <div class="dark-card p-8 rounded-xl shadow-lg dark-card-hover">
+                    <div class="w-16 h-16 bg-red-900 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-shield-alt text-red-400 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4 text-gray-100 moon-walk">The Problem: Systemic Vulnerabilities</h3>
+                    <ul class="text-gray-300 space-y-3">
+                        <li class="flex items-start">
+                            <i class="fas fa-exclamation-circle text-red-400 mt-1 mr-3"></i>
+                            <span>Lack of Sovereignty: Inability to control core security updates independently</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-exclamation-circle text-red-400 mt-1 mr-3"></i>
+                            <span>Fragmented Security: Security implemented at application level on insecure OS</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-exclamation-circle text-red-400 mt-1 mr-3"></i>
+                            <span>Identity and Accountability Crisis: Epidemic of identity theft and financial fraud</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-exclamation-circle text-red-400 mt-1 mr-3"></i>
+                            <span>Hardware Dependency: Reliance on global semiconductor vendors</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="dark-card p-8 rounded-xl shadow-lg dark-card-hover">
+                    <div class="w-16 h-16 bg-green-900 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-flag text-green-400 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4 text-gray-100 moon-walk">Our Vision: A Sovereign Digital India</h3>
+                    <p class="text-gray-300 mb-4">
+                        We envision a digital India where every citizen can interact online with confidence, privacy, and security. 
+                        A nation that controls its digital destiny, from the silicon of its devices to the software that powers its services.
+                    </p>
+                    <p class="text-gray-300">
+                        The <strong>Rito System</strong> is not just an identity solution; it is a holistic re-architecting of India's 
+                        digital public infrastructure, creating an ecosystem of trust where technology serves the citizen and the nation.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Architecture Section -->
+    <section id="architecture" class="py-16 bg-slate-900">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6 gradient-text moon-walk">System Architecture</h2>
+                <p class="text-lg text-gray-300">
+                    The Rito System establishes a verifiable "chain of trust" from the device hardware up, 
+                    mandating accountability for digital platforms and providing robust tools to protect vulnerable citizens.
+                </p>
+            </div>
+            
+            <div class="max-w-6xl mx-auto">
+                <div class="dark-card text-white rounded-xl p-8 mb-8">
+                    <h3 class="text-2xl font-bold mb-6 text-center moon-walk">The Four Pillars of the Ecosystem</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div class="bg-slate-800 p-6 rounded-lg border border-slate-700">
+                            <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center mb-4">
+                                <i class="fas fa-id-card text-white"></i>
+                            </div>
+                            <h4 class="text-lg font-bold mb-2 moon-walk">Rito Digital Identity</h4>
+                            <p class="text-gray-400 text-sm">The cryptographic anchor of citizen identity, stored in the device's secure hardware.</p>
+                        </div>
+                        
+                        <div class="bg-slate-800 p-6 rounded-lg border border-slate-700">
+                            <div class="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center mb-4">
+                                <i class="fas fa-desktop text-white"></i>
+                            </div>
+                            <h4 class="text-lg font-bold mb-2 moon-walk">Igris OS</h4>
+                            <p class="text-gray-400 text-sm">The sovereign OS on user devices (computers).</p>
+                        </div>
+                        
+                        <div class="bg-slate-800 p-6 rounded-lg border border-slate-700">
+                            <div class="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mb-4">
+                                <i class="fas fa-mobile-alt text-white"></i>
+                            </div>
+                            <h4 class="text-lg font-bold mb-2 moon-walk">Aegis OS</h4>
+                            <p class="text-gray-400 text-sm">The sovereign OS on mobile devices.</p>
+                        </div>
+                        
+                        <div class="bg-slate-800 p-6 rounded-lg border border-slate-700">
+                            <div class="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center mb-4">
+                                <i class="fas fa-server text-white"></i>
+                            </div>
+                            <h4 class="text-lg font-bold mb-2 moon-walk">Shaga OS</h4>
+                            <p class="text-gray-400 text-sm">The sovereign OS running on government servers and clouds.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dark-card p-8 rounded-xl">
+                    <h3 class="text-2xl font-bold mb-6 text-center text-blue-400 moon-walk">The Integrated Chain of Trust</h3>
+                    
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-8">
+                        <div class="text-center mb-6 md:mb-0">
+                            <div class="w-20 h-20 bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <i class="fas fa-microchip text-blue-400 text-2xl"></i>
+                            </div>
+                            <h4 class="font-bold text-gray-100 moon-walk">Hardware Root of Trust</h4>
+                            <p class="text-sm text-gray-400">ARM TEE & Secure Element</p>
+                        </div>
+                        
+                        <div class="hidden md:block">
+                            <i class="fas fa-arrow-right text-blue-400 text-2xl"></i>
+                        </div>
+                        <div class="block md:hidden my-4">
+                            <i class="fas fa-arrow-down text-blue-400 text-2xl"></i>
+                        </div>
+                        
+                        <div class="text-center mb-6 md:mb-0">
+                            <div class="w-20 h-20 bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <i class="fas fa-cogs text-purple-400 text-2xl"></i>
+                            </div>
+                            <h4 class="font-bold text-gray-100 moon-walk">Sovereign OS Layer</h4>
+                            <p class="text-sm text-gray-400">Igris/Aegis/Shaga OS</p>
+                        </div>
+                        
+                        <div class="hidden md:block">
+                            <i class="fas fa-arrow-right text-blue-400 text-2xl"></i>
+                        </div>
+                        <div class="block md:hidden my-4">
+                            <i class="fas fa-arrow-down text-blue-400 text-2xl"></i>
+                        </div>
+                        
+                        <div class="text-center mb-6 md:mb-0">
+                            <div class="w-20 h-20 bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <i class="fas fa-fingerprint text-green-400 text-2xl"></i>
+                            </div>
+                            <h4 class="font-bold text-gray-100 moon-walk">Identity & Protocol Layer</h4>
+                            <p class="text-sm text-gray-400">Rito Protocol</p>
+                        </div>
+                        
+                        <div class="hidden md:block">
+                            <i class="fas fa-arrow-right text-blue-400 text-2xl"></i>
+                        </div>
+                        <div class="block md:hidden my-4">
+                            <i class="fas fa-arrow-down text-blue-400 text-2xl"></i>
+                        </div>
+                        
+                        <div class="text-center">
+                            <div class="w-20 h-20 bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <i class="fas fa-layer-group text-red-400 text-2xl"></i>
+                            </div>
+                            <h4 class="font-bold text-gray-100 moon-walk">Application Layer</h4>
+                            <p class="text-sm text-gray-400">Social media, Banking, Govt. Apps</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Components Section -->
+    <section id="components" class="py-16 section-gradient">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6 gradient-text moon-walk">Core Technical Components</h2>
+                <p class="text-lg text-gray-300">
+                    The Rito System integrates multiple sovereign components to create a comprehensive digital identity framework.
+                </p>
+            </div>
+            
+            <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="dark-card p-6 rounded-xl shadow-lg dark-card-hover">
+                    <div class="w-14 h-14 bg-blue-900 rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-id-card-alt text-blue-400 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-gray-100 moon-walk">Rito Digital Identity</h3>
+                    <p class="text-gray-300 mb-4">
+                        A cryptographically secured digital credential bound to a user and their specific, certified device.
+                    </p>
+                    <ul class="text-gray-400 text-sm space-y-2">
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-400 mt-1 mr-2"></i>
+                            <span>Root of Trust: Device's ARM-based TEE</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-400 mt-1 mr-2"></i>
+                            <span>Key Storage: Asymmetric key pair</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-400 mt-1 mr-2"></i>
+                            <span>Biometric Data: Encrypted, device-local templates</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="dark-card p-6 rounded-xl shadow-lg dark-card-hover">
+                    <div class="w-14 h-14 bg-purple-900 rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-shield-alt text-purple-400 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-gray-100 moon-walk">Igris OS</h3>
+                    <p class="text-gray-300 mb-4">
+                        A sovereign, security-hardened desktop OS for user devices with privacy-by-default design.
+                    </p>
+                    <ul class="text-gray-400 text-sm space-y-2">
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-400 mt-1 mr-2"></i>
+                            <span>Base: Fork of FreeBSD for stability & security</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-400 mt-1 mr-2"></i>
+                            <span>Verified Boot & Hardware Attestation</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-400 mt-1 mr-2"></i>
+                            <span>Mandatory Application Sandboxing</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="dark-card p-6 rounded-xl shadow-lg dark-card-hover">
+                    <div class="w-14 h-14 bg-green-900 rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-mobile-alt text-green-400 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-gray-100 moon-walk">Aegis OS</h3>
+                    <p class="text-gray-300 mb-4">
+                        A privacy-first mobile operating system with enhanced security controls and Rito integration.
+                    </p>
+                    <ul class="text-gray-400 text-sm space-y-2">
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-400 mt-1 mr-2"></i>
+                            <span>Base: Hardened fork of Android Open Source Project</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-400 mt-1 mr-2"></i>
+                            <span>Enhanced Permission System</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-400 mt-1 mr-2"></i>
+                            <span>Hardware-Backed Keystore</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="dark-card p-6 rounded-xl shadow-lg dark-card-hover">
+                    <div class="w-14 h-14 bg-red-900 rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-server text-red-400 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-gray-100 moon-walk">Shaga OS</h3>
+                    <p class="text-gray-300 mb-4">
+                        A sovereign, high-performance server OS for national infrastructure with verifiable security.
+                    </p>
+                    <ul class="text-gray-400 text-sm space-y-2">
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-400 mt-1 mr-2"></i>
+                            <span>Jail-Based Isolation for services</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-400 mt-1 mr-2"></i>
+                            <span>Formal Verification of critical components</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-400 mt-1 mr-2"></i>
+                            <span>Built-in DDoS Mitigation</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="dark-card p-6 rounded-xl shadow-lg dark-card-hover">
+                    <div class="w-14 h-14 bg-indigo-900 rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-link text-indigo-400 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-gray-100 moon-walk">Rito Protocol</h3>
+                    <p class="text-gray-300 mb-4">
+                        A distributed authentication and verification system using Zero-Knowledge Proofs and permissioned blockchain.
+                    </p>
+                    <ul class="text-gray-400 text-sm space-y-2">
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-400 mt-1 mr-2"></i>
+                            <span>Zero-Knowledge Proof Engine</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-400 mt-1 mr-2"></i>
+                            <span>Federated Blockchain Identity Layer</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-400 mt-1 mr-2"></i>
+                            <span>Multi-Factor Authentication Framework</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="dark-card p-6 rounded-xl shadow-lg dark-card-hover">
+                    <div class="w-14 h-14 bg-yellow-900 rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-microchip text-yellow-400 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-gray-100 moon-walk">IEDA</h3>
+                    <p class="text-gray-300 mb-4">
+                        Indian Electrical Device Auth - A hardware identification system for all internet-connectable devices.
+                    </p>
+                    <ul class="text-gray-400 text-sm space-y-2">
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-400 mt-1 mr-2"></i>
+                            <span>Hardware chip integrated into all ICDs</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-400 mt-1 mr-2"></i>
+                            <span>128-bit globally unique identifier</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-400 mt-1 mr-2"></i>
+                            <span>Secure storage preventing tampering</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section id="benefits" class="py-16 bg-slate-900">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6 gradient-text moon-walk">Strategic Benefits & National Impact</h2>
+                <p class="text-lg text-gray-300">
+                    The Rito System delivers comprehensive benefits across sovereignty, economy, and society.
+                </p>
+            </div>
+            
+            <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="dark-card p-8 rounded-xl border-l-4 border-blue-500">
+                    <div class="w-14 h-14 bg-blue-900 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-shield-alt text-blue-400 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4 text-blue-400 moon-walk">National Sovereignty & Security</h3>
+                    <ul class="text-gray-300 space-y-3">
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle mt-1 mr-3 text-blue-400"></i>
+                            <span>Control over the entire digital stack</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle mt-1 mr-3 text-blue-400"></i>
+                            <span>Ability to respond instantly to threats</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle mt-1 mr-3 text-blue-400"></i>
+                            <span>A verifiable, secure foundation for critical infrastructure</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="dark-card p-8 rounded-xl border-l-4 border-green-500">
+                    <div class="w-14 h-14 bg-green-900 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-chart-line text-green-400 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4 text-green-400 moon-walk">Economic Growth & Innovation</h3>
+                    <ul class="text-gray-300 space-y-3">
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle mt-1 mr-3 text-green-400"></i>
+                            <span>Creation of a multi-billion-dollar domestic industry</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle mt-1 mr-3 text-green-400"></i>
+                            <span>Reduced digital fraud, saving ₹15,000+ crore annually</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle mt-1 mr-3 text-green-400"></i>
+                            <span>Fostering a new generation of engineers</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="dark-card p-8 rounded-xl border-l-4 border-purple-500">
+                    <div class="w-14 h-14 bg-purple-900 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-users text-purple-400 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4 text-purple-400 moon-walk">Social Safety & Inclusion</h3>
+                    <ul class="text-gray-300 space-y-3">
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle mt-1 mr-3 text-purple-400"></i>
+                            <span>A drastic reduction in cybercrime and online harassment</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle mt-1 mr-3 text-purple-400"></i>
+                            <span>Empowerment of seniors and non-tech-savvy citizens</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle mt-1 mr-3 text-purple-400"></i>
+                            <span>Restoration of trust in digital transactions</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Roadmap Section -->
+    <section id="roadmap" class="py-16 section-gradient">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6 gradient-text moon-walk">Implementation Roadmap</h2>
+                <p class="text-lg text-gray-300">
+                    A phased approach to development and deployment over 7 years.
+                </p>
+            </div>
+            
+            <div class="max-w-6xl mx-auto">
+                <!-- Phase 1 -->
+                <div class="roadmap-phase dark-card phase-completed">
+                    <span class="phase-badge badge-completed">Completed</span>
+                    <div class="flex items-start mb-4">
+                        <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mr-4">
+                            <span class="text-white font-bold text-xl">1</span>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-100 moon-walk">Phase 1: Foundation & R&D</h3>
+                            <p class="text-blue-400 font-semibold">Duration: Years 1-2 | Budget: ₹100 Crore</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <h4 class="text-lg font-semibold text-green-400 mb-2">Key Achievements</h4>
+                            <ul class="text-gray-300 space-y-2">
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-400 mt-1 mr-2"></i>
+                                    <span>R&D and Core OS Development Completed</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-400 mt-1 mr-2"></i>
+                                    <span>Pilot Infrastructure Successfully Deployed</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-400 mt-1 mr-2"></i>
+                                    <span>Igris/Aegis/Shaga OS v1.0 Feature Complete</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-semibold text-green-400 mb-2">Milestones</h4>
+                            <ul class="text-gray-300 space-y-2">
+                                <li class="flex items-start">
+                                    <i class="fas fa-flag text-green-400 mt-1 mr-2"></i>
+                                    <span>Security Architecture Validated</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-flag text-green-400 mt-1 mr-2"></i>
+                                    <span>Initial Partner Integration Successful</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Phase 2 -->
+                <div class="roadmap-phase dark-card phase-current">
+                    <span class="phase-badge badge-current">In Progress</span>
+                    <div class="flex items-start mb-4">
+                        <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mr-4">
+                            <span class="text-white font-bold text-xl">2</span>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-100 moon-walk">Phase 2: National Expansion</h3>
+                            <p class="text-blue-400 font-semibold">Duration: Years 3-4 | Budget: ₹20 Crore</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <h4 class="text-lg font-semibold text-blue-400 mb-2">Current Focus</h4>
+                            <ul class="text-gray-300 space-y-2">
+                                <li class="flex items-start">
+                                    <i class="fas fa-sync-alt text-blue-400 mt-1 mr-2"></i>
+                                    <span>National Infrastructure Scaling</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-sync-alt text-blue-400 mt-1 mr-2"></i>
+                                    <span>First "India Certified" Devices Launch</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-sync-alt text-blue-400 mt-1 mr-2"></i>
+                                    <span>100 Million Citizens Onboarding</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-semibold text-blue-400 mb-2">Progress</h4>
+                            <div class="bg-slate-800 rounded-full h-2 mb-2">
+                                <div class="bg-blue-500 h-2 rounded-full" style="width: 65%"></div>
+                            </div>
+                            <p class="text-gray-400 text-sm">65% Complete - On track for Q4 2025 completion</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Phase 3 -->
+                <div class="roadmap-phase dark-card phase-upcoming">
+                    <span class="phase-badge badge-upcoming">Upcoming</span>
+                    <div class="flex items-start mb-4">
+                        <div class="w-12 h-12 bg-gray-500 rounded-full flex items-center justify-center mr-4">
+                            <span class="text-white font-bold text-xl">3</span>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-100 moon-walk">Phase 3: Ecosystem Maturation</h3>
+                            <p class="text-blue-400 font-semibold">Duration: Years 5-7 | Budget: ₹50 Crore</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <h4 class="text-lg font-semibold text-gray-400 mb-2">Future Plans</h4>
+                            <ul class="text-gray-300 space-y-2">
+                                <li class="flex items-start">
+                                    <i class="fas fa-clock text-gray-400 mt-1 mr-2"></i>
+                                    <span>Advanced R&D Initiatives</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-clock text-gray-400 mt-1 mr-2"></i>
+                                    <span>International Expansion</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-clock text-gray-400 mt-1 mr-2"></i>
+                                    <span>Projected Break-even Point</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-semibold text-gray-400 mb-2">Expected Outcomes</h4>
+                            <ul class="text-gray-300 space-y-2">
+                                <li class="flex items-start">
+                                    <i class="fas fa-rocket text-gray-400 mt-1 mr-2"></i>
+                                    <span>Full Ecosystem Maturity</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-globe text-gray-400 mt-1 mr-2"></i>
+                                    <span>Global Standards Leadership</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-16 hero-gradient text-white">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6 moon-walk-glow">Ready to Get Started?</h2>
+                <p class="text-xl mb-8 opacity-90">
+                    Join our community, explore documentation, or get in touch with our team.
+                </p>
+                <div class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-6">
+                    <a href="{% url 'user:community' %}" class="bg-slate-800 text-blue-400 font-semibold py-3 px-8 rounded-lg shadow-lg hover:bg-slate-700 transition duration-300 border border-slate-600">Join Community</a>
+                    <a href="{% url 'user:docs' %}" class="bg-transparent border-2 border-blue-400 text-blue-400 font-semibold py-3 px-8 rounded-lg hover:bg-blue-400 hover:text-slate-900 transition duration-300">View Documentation</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

@@ -1,0 +1,847 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Dashboard - Rito System{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-white mb-2">Hello {{ request.user.username }}</h1>
+            <h1 class="text-3xl font-bold text-white mb-2">Rito ID: {{ request.user.ritoaccount.rito_id }}</h1>
+            <h1 class="text-3xl font-bold text-white mb-2">Rito System Dashboard</h1>
+            <p class="text-gray-400">Manage your digital identity and connected accounts</p>
+        </div>
+
+        <!-- System Status Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- Device Status -->
+            <div class="dark-card rounded-xl p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-400 text-sm">Device Status</p>
+                        <p class="text-2xl font-bold text-white mt-1">
+                            {% if device %}Active{% else %}Not Registered{% endif %}
+                        </p>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center">
+                        <i class="fas fa-microchip text-blue-400 text-xl"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-sm {% if device %}text-green-400{% else %}text-yellow-400{% endif %}">
+                        <i class="fas {% if device %}fa-check-circle{% else %}fa-exclamation-triangle{% endif %} mr-1"></i>
+                        {% if device %}Verified{% else %}Registration Required{% endif %}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Location Status -->
+            <div class="dark-card rounded-xl p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-400 text-sm">Device Location</p>
+                        <p class="text-2xl font-bold text-white mt-1">
+                            {% if location_data %}Tracked{% else %}Unknown{% endif %}
+                        </p>
+                    </div>
+                    <div class="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center">
+                        <i class="fas fa-map-marker-alt text-green-400 text-xl"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-sm {% if location_data %}text-green-400{% else %}text-gray-400{% endif %}">
+                        <i class="fas {% if location_data %}fa-map-marker-alt{% else %}fa-question-circle{% endif %} mr-1"></i>
+                        {% if location_data %}{{ device.location_string }}{% else %}No Data{% endif %}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Social Accounts -->
+            <div class="dark-card rounded-xl p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-400 text-sm">Connected Accounts</p>
+                        <p class="text-2xl font-bold text-white mt-1">{{ social_accounts|length }}</p>
+                    </div>
+                    <div class="w-12 h-12 bg-purple-500/20 rounded-full flex items-center justify-center">
+                        <i class="fas fa-share-nodes text-purple-400 text-xl"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-sm text-gray-400">
+                        <i class="fas fa-users mr-1"></i>
+                        Platform Links
+                    </span>
+                </div>
+            </div>
+
+            <!-- Security Score -->
+            <div class="dark-card rounded-xl p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-400 text-sm">Security Score</p>
+                        <p class="text-2xl font-bold text-white mt-1">
+                            {% if device and social_accounts %}95%{% else %}65%{% endif %}
+                        </p>
+                    </div>
+                    <div class="w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center">
+                        <i class="fas fa-shield-alt text-red-400 text-xl"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-sm {% if device and social_accounts %}text-green-400{% else %}text-yellow-400{% endif %}">
+                        <i class="fas {% if device and social_accounts %}fa-lock{% else %}fa-lock-open{% endif %} mr-1"></i>
+                        {% if device and social_accounts %}High{% else %}Medium{% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Column - Device & Identity -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Device Information -->
+                <div class="dark-card rounded-xl p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-xl font-bold text-white">Device Information</h2>
+                        {% if not device %}
+                        <button onclick="openRitoIdModal()" class="btn-primary">
+                            <i class="fas fa-plus mr-2"></i>Register Device
+                        </button>
+                        {% endif %}
+                    </div>
+                    
+                    {% if device %}
+                    <div class="space-y-4">
+                        <!-- Basic Device Info -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-gray-400 text-sm">IEDA</label>
+                                <p class="text-white font-mono text-sm">{{ device.ieda|truncatechars:20 }}</p>
+                            </div>
+                            <div>
+                                <label class="text-gray-400 text-sm">Registration Code</label>
+                                <p class="text-white font-mono">{{ device.registration_code }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-gray-400 text-sm">MAC Address</label>
+                                <p class="text-white font-mono text-sm">{{ device.mac_address }}</p>
+                            </div>
+                            <div>
+                                <label class="text-gray-400 text-sm">Registered</label>
+                                <p class="text-white">{{ device.registered_at|date:"M d, Y" }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Location Information -->
+                        <div class="bg-slate-800/50 rounded-lg p-4 mt-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 class="text-lg font-semibold text-white">Device Location</h3>
+                                <span class="px-2 py-1 bg-blue-600 rounded text-xs">Live</span>
+                            </div>
+                            
+                            {% if location_data %}
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="text-gray-400 text-sm">Location</label>
+                                    <p class="text-white">{{ device.location_string }}</p>
+                                </div>
+                                <div>
+                                    <label class="text-gray-400 text-sm">IP Address</label>
+                                    <p class="text-white font-mono text-sm">{{ device.ip_address }}</p>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4 mt-2">
+                                <div>
+                                    <label class="text-gray-400 text-sm">Coordinates</label>
+                                    <p class="text-white font-mono text-sm">
+                                        {{ device.latitude|floatformat:4 }}, {{ device.longitude|floatformat:4 }}
+                                    </p>
+                                </div>
+                                <div>
+                                    <label class="text-gray-400 text-sm">Last Seen</label>
+                                    <p class="text-white">{{ device.last_seen|timesince }} ago</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Mini Map Visualization -->
+                            <div class="mt-3 bg-slate-900 rounded p-3">
+                                <div class="flex items-center justify-between mb-2">
+                                    <h4 class="text-white font-semibold text-sm">Location Map</h4>
+                                    <button onclick="refreshLocation()" class="text-xs bg-blue-600 hover:bg-blue-700 px-2 py-1 rounded transition-colors">
+                                        <i class="fas fa-sync-alt mr-1"></i>Refresh
+                                    </button>
+                                </div>
+                                <div class="bg-slate-800 rounded p-4 text-center">
+                                    <i class="fas fa-map-marker-alt text-red-400 text-2xl mb-2"></i>
+                                    <p class="text-gray-300 text-sm">Device Location Active</p>
+                                    <p class="text-gray-500 text-xs">Live tracking enabled</p>
+                                    <div class="mt-2 flex justify-center space-x-2">
+                                        <span class="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded">Online</span>
+                                        <span class="text-xs bg-blue-500/20 text-blue-400 px-2 py-1 rounded">Tracking</span>
+                                    </div>
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="text-center py-4">
+                                <i class="fas fa-map-marker-alt text-gray-600 text-2xl mb-2"></i>
+                                <p class="text-gray-400">Location data unavailable</p>
+                                <p class="text-gray-500 text-sm">Device location will appear here once registered</p>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="pt-4 border-t border-gray-700">
+                            <div class="flex items-center text-green-400">
+                                <i class="fas fa-check-circle mr-2"></i>
+                                <span class="text-sm">Device verified and active</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-8">
+                        <i class="fas fa-microchip text-4xl text-gray-600 mb-4"></i>
+                        <h3 class="text-lg font-semibold text-gray-300 mb-2">No Device Registered</h3>
+                        <p class="text-gray-500 mb-4">Register your device to enable location tracking</p>
+                        <button onclick="openRitoIdModal()" class="btn-primary inline-flex items-center">
+                            <i class="fas fa-microchip mr-2"></i>Register Device
+                        </button>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Social Accounts -->
+                <div class="dark-card rounded-xl p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-xl font-bold text-white">Connected Social Accounts</h2>
+                        {% if device %}
+                        <a href="{% url 'user:create_social_account' %}" class="btn-primary">
+                            <i class="fas fa-plus mr-2"></i>Add Account
+                        </a>
+                        {% endif %}
+                    </div>
+
+                    {% if social_accounts %}
+                    <div class="space-y-4">
+                        {% for social_account in social_accounts %}
+                        <div class="flex items-center justify-between p-4 bg-slate-800/50 rounded-lg border border-slate-700">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-10 h-10 rounded-full flex items-center justify-center 
+                                    {% if social_account.platform == 'instagram' %}bg-pink-500/20 text-pink-400
+                                    {% elif social_account.platform == 'youtube' %}bg-red-500/20 text-red-400
+                                    {% elif social_account.platform == 'twitter' %}bg-blue-500/20 text-blue-400
+                                    {% elif social_account.platform == 'facebook' %}bg-indigo-500/20 text-indigo-400
+                                    {% else %}bg-gray-500/20 text-gray-400{% endif %}">
+                                    <i class="fab fa-{{ social_account.platform }}"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-white capitalize">{{ social_account.platform }}</h3>
+                                    <p class="text-gray-400 text-sm">@{{ social_account.username }}</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <a href="{% url 'user:account_detail' social_account.platform %}" 
+                                   class="px-3 py-1 bg-blue-600 hover:bg-blue-700 rounded text-sm transition-colors">
+                                    View
+                                </a>
+                                <form method="post" action="{% url 'user:delete_social_account' social_account.platform %}" 
+                                      class="inline" onsubmit="return confirm('Are you sure you want to delete this account?');">
+                                    {% csrf_token %}
+                                    <button type="submit" class="px-3 py-1 bg-red-600 hover:bg-red-700 rounded text-sm transition-colors">
+                                        Delete
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-8">
+                        <i class="fas fa-share-nodes text-4xl text-gray-600 mb-4"></i>
+                        <h3 class="text-lg font-semibold text-gray-300 mb-2">No Connected Accounts</h3>
+                        <p class="text-gray-500 mb-4">
+                            {% if device %}
+                                Connect your social media accounts to get started with Rito System
+                            {% else %}
+                                Register your device first to connect social accounts
+                            {% endif %}
+                        </p>
+                        {% if device %}
+                        <a href="{% url 'user:create_social_account' %}" class="btn-primary inline-flex items-center">
+                            <i class="fas fa-plus mr-2"></i>Connect Account
+                        </a>
+                        {% else %}
+                        <button onclick="openRitoIdModal()" class="btn-primary inline-flex items-center">
+                            <i class="fas fa-microchip mr-2"></i>Register Device First
+                        </button>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Identity Verification -->
+                <div class="dark-card rounded-xl p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-xl font-bold text-white">Identity Verification</h2>
+                        <span class="px-3 py-1 bg-green-600 rounded-full text-sm font-semibold">
+                            Verified
+                        </span>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 bg-green-500/20 rounded-full flex items-center justify-center mr-3">
+                                    <i class="fas fa-check text-green-400 text-sm"></i>
+                                </div>
+                                <div>
+                                    <p class="text-white font-semibold">Rito ID Assigned</p>
+                                    <p class="text-gray-400 text-sm">Your unique identifier is active</p>
+                                </div>
+                            </div>
+                            <span class="text-green-400">{{ request.user.account.created_at|date:"M d, Y" }}</span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 {% if device %}bg-green-500/20{% else %}bg-yellow-500/20{% endif %} rounded-full flex items-center justify-center mr-3">
+                                    <i class="fas {% if device %}fa-check{% else %}fa-exclamation{% endif %} {% if device %}text-green-400{% else %}text-yellow-400{% endif %} text-sm"></i>
+                                </div>
+                                <div>
+                                    <p class="text-white font-semibold">Device Registration</p>
+                                    <p class="text-gray-400 text-sm">Hardware security binding</p>
+                                </div>
+                            </div>
+                            <span class="{% if device %}text-green-400{% else %}text-yellow-400{% endif %}">
+                                {% if device %}Completed{% else %}Pending{% endif %}
+                            </span>
+                        </div>
+
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 {% if social_accounts %}bg-green-500/20{% else %}bg-gray-500/20{% endif %} rounded-full flex items-center justify-center mr-3">
+                                    <i class="fas {% if social_accounts %}fa-check{% else %}fa-link{% endif %} {% if social_accounts %}text-green-400{% else %}text-gray-400{% endif %} text-sm"></i>
+                                </div>
+                                <div>
+                                    <p class="text-white font-semibold">Social Accounts</p>
+                                    <p class="text-gray-400 text-sm">Platform connections</p>
+                                </div>
+                            </div>
+                            <span class="{% if social_accounts %}text-green-400{% else %}text-gray-400{% endif %}">
+                                {{ social_accounts|length }} Connected
+                            </span>
+                        </div>
+
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 {% if location_data %}bg-green-500/20{% else %}bg-gray-500/20{% endif %} rounded-full flex items-center justify-center mr-3">
+                                    <i class="fas {% if location_data %}fa-map-marker-alt{% else %}fa-location-crosshairs{% endif %} {% if location_data %}text-green-400{% else %}text-gray-400{% endif %} text-sm"></i>
+                                </div>
+                                <div>
+                                    <p class="text-white font-semibold">Location Tracking</p>
+                                    <p class="text-gray-400 text-sm">Device position monitoring</p>
+                                </div>
+                            </div>
+                            <span class="{% if location_data %}text-green-400{% else %}text-gray-400{% endif %}">
+                                {% if location_data %}Active{% else %}Inactive{% endif %}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column - Quick Actions & Status -->
+            <div class="space-y-6">
+                <!-- Quick Actions -->
+                <div class="dark-card rounded-xl p-6">
+                    <h2 class="text-xl font-bold text-white mb-4">Quick Actions</h2>
+                    <div class="space-y-3">
+                        {% if device %}
+                        <a href="{% url 'user:create_social_account' %}" 
+                           class="flex items-center p-3 bg-slate-800/50 rounded-lg border border-slate-700 hover:border-blue-500 transition-colors group">
+                            <div class="w-8 h-8 bg-blue-500/20 rounded-full flex items-center justify-center mr-3 group-hover:bg-blue-500/30 transition-colors">
+                                <i class="fas fa-plus text-blue-400"></i>
+                            </div>
+                            <span class="text-white">Connect Social Account</span>
+                        </a>
+                        {% endif %}
+                        
+                        {% if not device %}
+                        <button onclick="openRitoIdModal()" 
+                           class="w-full flex items-center p-3 bg-slate-800/50 rounded-lg border border-slate-700 hover:border-green-500 transition-colors group">
+                            <div class="w-8 h-8 bg-green-500/20 rounded-full flex items-center justify-center mr-3 group-hover:bg-green-500/30 transition-colors">
+                                <i class="fas fa-microchip text-green-400"></i>
+                            </div>
+                            <span class="text-white">Register Device</span>
+                        </button>
+                        {% endif %}
+
+                        {% if device %}
+                        <button onclick="refreshLocation()" 
+                           class="w-full flex items-center p-3 bg-slate-800/50 rounded-lg border border-slate-700 hover:border-purple-500 transition-colors group">
+                            <div class="w-8 h-8 bg-purple-500/20 rounded-full flex items-center justify-center mr-3 group-hover:bg-purple-500/30 transition-colors">
+                                <i class="fas fa-map-marker-alt text-purple-400"></i>
+                            </div>
+                            <span class="text-white">Update Location</span>
+                        </button>
+                        {% endif %}
+
+                        <a href="{% url 'user:docs' %}" 
+                           class="flex items-center p-3 bg-slate-800/50 rounded-lg border border-slate-700 hover:border-yellow-500 transition-colors group">
+                            <div class="w-8 h-8 bg-yellow-500/20 rounded-full flex items-center justify-center mr-3 group-hover:bg-yellow-500/30 transition-colors">
+                                <i class="fas fa-book text-yellow-400"></i>
+                            </div>
+                            <span class="text-white">Documentation</span>
+                        </a>
+
+                        <a href="{% url 'user:faq' %}" 
+                           class="flex items-center p-3 bg-slate-800/50 rounded-lg border border-slate-700 hover:border-red-500 transition-colors group">
+                            <div class="w-8 h-8 bg-red-500/20 rounded-full flex items-center justify-center mr-3 group-hover:bg-red-500/30 transition-colors">
+                                <i class="fas fa-question text-red-400"></i>
+                            </div>
+                            <span class="text-white">Help & Support</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- System Status -->
+                <div class="dark-card rounded-xl p-6">
+                    <h2 class="text-xl font-bold text-white mb-4">System Status</h2>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-400">Identity Service</span>
+                            <span class="flex items-center text-green-400">
+                                <i class="fas fa-check-circle mr-2"></i>Online
+                            </span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-400">Device Registry</span>
+                            <span class="flex items-center {% if device %}text-green-400{% else %}text-yellow-400{% endif %}">
+                                <i class="fas {% if device %}fa-check-circle{% else %}fa-exclamation-triangle{% endif %} mr-2"></i>
+                                {% if device %}Active{% else %}No Device{% endif %}
+                            </span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-400">Location Service</span>
+                            <span class="flex items-center {% if location_data %}text-green-400{% else %}text-gray-400{% endif %}">
+                                <i class="fas {% if location_data %}fa-check-circle{% else %}fa-pause-circle{% endif %} mr-2"></i>
+                                {% if location_data %}Tracking{% else %}Inactive{% endif %}
+                            </span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-400">API Gateway</span>
+                            <span class="flex items-center text-green-400">
+                                <i class="fas fa-check-circle mr-2"></i>Operational
+                            </span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-400">Security Layer</span>
+                            <span class="flex items-center text-green-400">
+                                <i class="fas fa-check-circle mr-2"></i>Active
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="dark-card rounded-xl p-6">
+                    <h2 class="text-xl font-bold text-white mb-4">Recent Activity</h2>
+                    <div class="space-y-3">
+                        <div class="flex items-center text-sm">
+                            <i class="fas fa-id-card text-green-400 mr-3"></i>
+                            <span class="text-gray-300">Rito ID assigned</span>
+                            <span class="text-gray-500 ml-auto">{{ request.user.account.created_at|timesince }} ago</span>
+                        </div>
+                        
+                        {% if device %}
+                        <div class="flex items-center text-sm">
+                            <i class="fas fa-microchip text-blue-400 mr-3"></i>
+                            <span class="text-gray-300">Device registered</span>
+                            <span class="text-gray-500 ml-auto">{{ device.registered_at|timesince }} ago</span>
+                        </div>
+                        {% endif %}
+                        
+                        {% if location_data %}
+                        <div class="flex items-center text-sm">
+                            <i class="fas fa-map-marker-alt text-green-400 mr-3"></i>
+                            <span class="text-gray-300">Location updated</span>
+                            <span class="text-gray-500 ml-auto">{{ device.last_seen|timesince }} ago</span>
+                        </div>
+                        {% endif %}
+                        
+                        {% for social_account in social_accounts|slice:":2" %}
+                        <div class="flex items-center text-sm">
+                            <i class="fab fa-{{ social_account.platform }} 
+                                {% if social_account.platform == 'instagram' %}text-pink-400
+                                {% elif social_account.platform == 'youtube' %}text-red-400
+                                {% elif social_account.platform == 'twitter' %}text-blue-400
+                                {% else %}text-gray-400{% endif %} mr-3"></i>
+                            <span class="text-gray-300">{{ social_account.platform|title }} connected</span>
+                            <span class="text-gray-500 ml-auto">{{ social_account.created_at|timesince }} ago</span>
+                        </div>
+                        {% endfor %}
+
+                        {% if not social_accounts and not device %}
+                        <div class="text-center py-4 text-gray-500">
+                            <i class="fas fa-history text-2xl mb-2"></i>
+                            <p class="text-sm">No recent activity</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Security Tips -->
+                <div class="dark-card rounded-xl p-6">
+                    <h2 class="text-xl font-bold text-white mb-4">Security Tips</h2>
+                    <div class="space-y-3">
+                        <div class="flex items-start text-sm">
+                            <i class="fas fa-shield-alt text-green-400 mr-3 mt-0.5"></i>
+                            <span class="text-gray-300">Your Rito ID provides hardware-level security</span>
+                        </div>
+                        <div class="flex items-start text-sm">
+                            <i class="fas fa-key text-blue-400 mr-3 mt-0.5"></i>
+                            <span class="text-gray-300">Keep your device secure - it's your digital key</span>
+                        </div>
+                        <div class="flex items-start text-sm">
+                            <i class="fas fa-map-marker-alt text-purple-400 mr-3 mt-0.5"></i>
+                            <span class="text-gray-300">Location tracking helps monitor device security</span>
+                        </div>
+                        <div class="flex items-start text-sm">
+                            <i class="fas fa-link text-yellow-400 mr-3 mt-0.5"></i>
+                            <span class="text-gray-300">Connect accounts to enhance your digital identity</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Rito ID Creation Modal -->
+<div id="ritoIdModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden transition-opacity duration-300">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="bg-slate-800 rounded-2xl shadow-2xl w-full max-w-4xl mx-auto transform transition-all duration-300 scale-95 opacity-0 modal-landscape"
+             id="modalContent">
+            <!-- Modal Header -->
+            <div class="p-6 border-b border-slate-700">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-blue-500/20 rounded-full flex items-center justify-center">
+                            <i class="fas fa-microchip text-blue-400"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-white">Complete Your Rito Setup</h3>
+                            <p class="text-gray-400 text-sm">Register your device to activate all features</p>
+                        </div>
+                    </div>
+                    <button onclick="closeRitoIdModal()" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Modal Body - Landscape Layout -->
+            <div class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Step 1: Your Rito ID -->
+                    <div class="bg-slate-700/50 rounded-lg p-5 border border-slate-600 flex flex-col">
+                        <div class="flex items-center justify-between mb-3">
+                            <h4 class="font-semibold text-white">Your Rito ID</h4>
+                            <span class="bg-green-500 text-white text-xs px-2 py-1 rounded-full">Active</span>
+                        </div>
+                        <div class="flex-grow">
+                            <p class="text-gray-300 text-sm mb-4">
+                                Your unique identifier is ready and waiting for device registration.
+                            </p>
+                            <div class="bg-slate-800 rounded-lg p-3 text-center">
+                                <p class="text-white font-mono font-bold text-lg">{{ request.user.account.rito_id }}</p>
+                                <p class="text-green-400 text-xs mt-1">✓ Ready for activation</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Device Registration -->
+                    <div class="bg-slate-700/50 rounded-lg p-5 border border-slate-600 flex flex-col">
+                        <div class="flex items-center justify-between mb-3">
+                            <h4 class="font-semibold text-white">Device Registration</h4>
+                            <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full">Required</span>
+                        </div>
+                        <p class="text-gray-300 text-sm mb-4 flex-grow">
+                            Register your hardware device to bind your Rito ID with secure hardware keys and enable location tracking.
+                        </p>
+                        <a href="{% url 'user:register_device' %}" class="w-full btn-primary flex items-center justify-center mt-auto">
+                            <i class="fas fa-microchip mr-2"></i>
+                            Register Device
+                        </a>
+                    </div>
+
+                    <!-- Step 3: Social Integration -->
+                    <div class="bg-slate-700/50 rounded-lg p-5 border border-slate-600 flex flex-col">
+                        <div class="flex items-center justify-between mb-3">
+                            <h4 class="font-semibold text-white">Social Integration</h4>
+                            <span class="bg-purple-500 text-white text-xs px-2 py-1 rounded-full">Next Step</span>
+                        </div>
+                        <p class="text-gray-300 text-sm mb-4 flex-grow">
+                            Connect your social media accounts with enhanced security and privacy.
+                        </p>
+                        <div class="grid grid-cols-2 gap-2 mt-auto">
+                            <div class="text-center p-2 bg-slate-600 rounded">
+                                <i class="fab fa-instagram text-pink-400 mb-1"></i>
+                                <p class="text-xs text-gray-300">Instagram</p>
+                            </div>
+                            <div class="text-center p-2 bg-slate-600 rounded">
+                                <i class="fab fa-youtube text-red-400 mb-1"></i>
+                                <p class="text-xs text-gray-300">YouTube</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Security Features -->
+                <div class="mt-6 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
+                    <div class="flex items-start">
+                        <i class="fas fa-shield-alt text-blue-400 mt-1 mr-3"></i>
+                        <div>
+                            <h4 class="text-blue-300 font-semibold text-sm mb-1">Enhanced Security Features</h4>
+                            <ul class="text-blue-200/80 text-xs grid grid-cols-2 gap-1">
+                                <li>• Hardware-based root of trust</li>
+                                <li>• End-to-end encryption</li>
+                                <li>• Real-time location tracking</li>
+                                <li>• Zero-knowledge proofs</li>
+                                <li>• Multi-factor authentication</li>
+                                <li>• 6-digit code verification</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="p-6 border-t border-slate-700 bg-slate-900/50 rounded-b-2xl">
+                <div class="flex space-x-3">
+                    <button onclick="closeRitoIdModal()" 
+                            class="flex-1 px-4 py-2 border border-slate-600 text-gray-300 hover:bg-slate-700 rounded-lg transition-colors">
+                        Maybe Later
+                    </button>
+                    <a href="{% url 'user:register_device' %}" 
+                       class="flex-1 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center">
+                        <i class="fas fa-rocket mr-2"></i>
+                        Register Device
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Rito ID Modal Functions
+    function openRitoIdModal() {
+        const modal = document.getElementById('ritoIdModal');
+        const content = document.getElementById('modalContent');
+        
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+            modal.classList.add('opacity-100');
+            content.classList.remove('scale-95', 'opacity-0');
+            content.classList.add('scale-100', 'opacity-100');
+        }, 50);
+        
+        document.body.style.overflow = 'hidden';
+        markModalAsSeen();
+    }
+
+    function closeRitoIdModal() {
+        const modal = document.getElementById('ritoIdModal');
+        const content = document.getElementById('modalContent');
+        
+        modal.classList.remove('opacity-100');
+        content.classList.remove('scale-100', 'opacity-100');
+        content.classList.add('scale-95', 'opacity-0');
+        
+        setTimeout(() => {
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }, 300);
+    }
+
+    // Close modal on outside click
+    document.getElementById('ritoIdModal').addEventListener('click', function(e) {
+        if (e.target.id === 'ritoIdModal') {
+            closeRitoIdModal();
+        }
+    });
+
+    // Close modal on Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeRitoIdModal();
+        }
+    });
+
+    // Refresh location function
+    async function refreshLocation() {
+        try {
+            const response = await fetch('/api/device/location/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    ieda: '{{ device.ieda }}'
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (data.status === 'success') {
+                showNotification('Location updated successfully', 'success');
+                // Reload the page to show updated location
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+            } else {
+                showNotification('Failed to update location: ' + data.message, 'error');
+            }
+        } catch (error) {
+            showNotification('Error updating location: ' + error, 'error');
+        }
+    }
+
+    // Notification system
+    function showNotification(message, type) {
+        // Remove existing notifications
+        const existingNotifications = document.querySelectorAll('.custom-notification');
+        existingNotifications.forEach(notification => notification.remove());
+
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `custom-notification fixed top-4 right-4 p-4 rounded-lg z-50 transform transition-all duration-300 ${
+            type === 'success' ? 'bg-green-600' : 'bg-red-600'
+        } text-white shadow-lg`;
+        notification.innerHTML = `
+            <div class="flex items-center">
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'} mr-2"></i>
+                <span>${message}</span>
+            </div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Animate in
+        setTimeout(() => {
+            notification.classList.add('translate-x-0', 'opacity-100');
+        }, 10);
+
+        // Remove after 5 seconds
+        setTimeout(() => {
+            notification.classList.remove('translate-x-0', 'opacity-100');
+            notification.classList.add('translate-x-full', 'opacity-0');
+            setTimeout(() => {
+                notification.remove();
+            }, 300);
+        }, 5000);
+    }
+
+    // Initialize notification styles
+    const style = document.createElement('style');
+    style.textContent = `
+        .custom-notification {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        .custom-notification.translate-x-0 {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    `;
+    document.head.appendChild(style);
+
+    // Auto-open modal if no device is registered
+    document.addEventListener('DOMContentLoaded', function() {
+        {% if not device %}
+        if (!localStorage.getItem('ritoIdModalSeen')) {
+            setTimeout(() => {
+                openRitoIdModal();
+            }, 1000);
+        }
+        {% endif %}
+    });
+
+    function markModalAsSeen() {
+        localStorage.setItem('ritoIdModalSeen', 'true');
+    }
+</script>
+
+<style>
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .animate-fade-in-up {
+        animation: fadeInUp 0.5s ease-out forwards;
+    }
+    
+    /* Smooth transitions for modal */
+    #ritoIdModal {
+        transition: opacity 0.3s ease-in-out;
+    }
+    
+    #modalContent {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    /* Enhanced button hover effects */
+    .btn-primary {
+        background: linear-gradient(135deg, #1e40af, #1e3a8a);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .btn-primary::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: left 0.5s;
+    }
+    
+    .btn-primary:hover::before {
+        left: 100%;
+    }
+    
+    /* Landscape modal styling for PC */
+    @media (min-width: 768px) {
+        .modal-landscape {
+            max-width: 800px;
+            width: 90%;
+        }
+    }
+    
+    /* Mobile responsiveness */
+    @media (max-width: 767px) {
+        .modal-landscape {
+            max-width: 95%;
+            margin: 1rem auto;
+        }
+    }
+</style>
+{% endblock %}

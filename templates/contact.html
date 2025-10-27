@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="py-16 section-gradient">
+    <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-4xl font-bold mb-6 gradient-text text-center moon-walk">Contact Us</h1>
+            <p class="text-lg text-gray-300 mb-8 text-center">
+                Have questions or want to collaborate? Get in touch with our team.
+            </p>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="dark-card p-8 rounded-xl">
+                    <h2 class="text-2xl font-bold mb-6 text-blue-400 moon-walk">Send us a Message</h2>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="space-y-4">
+                            <div>
+                                <label class="form-label">Your Name</label>
+                                {{ form.name }}
+                            </div>
+                            <div>
+                                <label class="form-label">Email Address</label>
+                                {{ form.email }}
+                            </div>
+                            <div>
+                                <label class="form-label">Subject</label>
+                                {{ form.subject }}
+                            </div>
+                            <div>
+                                <label class="form-label">Message</label>
+                                {{ form.message }}
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-primary w-full mt-6">Send Message</button>
+                    </form>
+                </div>
+                
+                <div class="dark-card p-8 rounded-xl">
+                    <h2 class="text-2xl font-bold mb-6 text-green-400 moon-walk">Get in Touch</h2>
+                    <div class="space-y-6">
+                        <div class="flex items-start">
+                            <i class="fas fa-envelope text-blue-400 text-xl mt-1 mr-4"></i>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-100">Email</h3>
+                                <p class="text-gray-400">aegisinitiative45@gmail.com</p>
+                                <p class="text-gray-400">vicky28.developer@gmail.com</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-phone text-green-400 text-xl mt-1 mr-4"></i>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-100">Phone</h3>
+                                <p class="text-gray-400">+91 6379077144</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-map-marker-alt text-red-400 text-xl mt-1 mr-4"></i>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-100">Location</h3>
+                                <p class="text-gray-400">Kanchipuram, TamilNadu</p>
+                                <p class="text-gray-400">South India</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

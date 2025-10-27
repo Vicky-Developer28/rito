@@ -1,0 +1,296 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Connect Social Account - Rito System{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 py-8">
+    <div class="max-w-md mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Back Button -->
+        <div class="mb-6">
+            <a href="{% url 'user:dashboard' %}" class="inline-flex items-center text-blue-400 hover:text-blue-300 transition-colors">
+                <i class="fas fa-arrow-left mr-2"></i>
+                Back to Dashboard
+            </a>
+        </div>
+
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <div class="w-16 h-16 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-share-nodes text-blue-400 text-2xl"></i>
+            </div>
+            <h1 class="text-3xl font-bold text-white mb-2">Connect Social Account</h1>
+            <p class="text-gray-400">Link your social media accounts to your Rito identity</p>
+        </div>
+
+        <!-- Connection Form -->
+        <div class="dark-card rounded-xl p-6">
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                
+                <!-- Platform Selection -->
+                <div>
+                    <label class="block text-gray-400 text-sm font-medium mb-3">
+                        Select Platform
+                    </label>
+                    <div class="space-y-3">
+                        {% for value, label in form.platform.field.choices %}
+                            {% if value %}
+                            <div class="platform-option">
+                                <input type="radio" 
+                                       id="platform_{{ value }}" 
+                                       name="platform" 
+                                       value="{{ value }}" 
+                                       class="hidden peer"
+                                       {% if forloop.first %}checked{% endif %}>
+                                <label for="platform_{{ value }}" 
+                                       class="flex items-center p-4 bg-slate-800/50 rounded-lg border-2 border-slate-700 peer-checked:border-blue-500 cursor-pointer transition-all duration-300 hover:border-blue-400">
+                                    <div class="w-10 h-10 rounded-full flex items-center justify-center mr-4 
+                                        {% if value == 'instagram' %}bg-pink-500/20 text-pink-400
+                                        {% else %}bg-red-500/20 text-red-400{% endif %}">
+                                        <i class="fab fa-{{ value }} text-lg"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h3 class="font-semibold text-white capitalize">{{ label }}</h3>
+                                        <p class="text-gray-400 text-sm">
+                                            {% if value == 'instagram' %}
+                                                Connect your Instagram account
+                                            {% else %}
+                                                Connect your YouTube channel
+                                            {% endif %}
+                                        </p>
+                                    </div>
+                                    <div class="w-6 h-6 rounded-full border-2 border-slate-600 peer-checked:border-blue-500 peer-checked:bg-blue-500 flex items-center justify-center transition-colors">
+                                        <i class="fas fa-check text-white text-xs opacity-0 peer-checked:opacity-100 transition-opacity"></i>
+                                    </div>
+                                </label>
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    {% if form.platform.errors %}
+                    <div class="text-red-400 text-sm mt-2">
+                        {% for error in form.platform.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Device Status Check -->
+                {% if device %}
+                <div class="p-4 bg-green-500/10 border border-green-500/30 rounded-lg">
+                    <div class="flex items-center">
+                        <i class="fas fa-check-circle text-green-400 mr-3"></i>
+                        <div>
+                            <h4 class="text-green-300 font-semibold text-sm">Device Ready</h4>
+                            <p class="text-green-200/80 text-xs">Your device is registered and secure</p>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
+                    <div class="flex items-center">
+                        <i class="fas fa-exclamation-triangle text-red-400 mr-3"></i>
+                        <div>
+                            <h4 class="text-red-300 font-semibold text-sm">Device Required</h4>
+                            <p class="text-red-200/80 text-xs">Register a device first to connect accounts</p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Terms Agreement -->
+                <div class="flex items-start space-x-3 p-4 bg-slate-800/30 rounded-lg">
+                    <input type="checkbox" 
+                           id="terms" 
+                           name="terms" 
+                           required
+                           class="mt-1 rounded border-gray-600 bg-slate-700 text-blue-500 focus:ring-blue-500 focus:ring-offset-slate-800">
+                    <label for="terms" class="text-gray-300 text-sm">
+                        I authorize Rito System to create and manage my 
+                        <span id="platform-name" class="font-semibold">Instagram</span> account 
+                        according to the <a href="#" class="text-blue-400 hover:text-blue-300">Terms of Service</a>.
+                    </label>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="flex space-x-4">
+                    <button type="submit" class="btn-primary flex-1" {% if not device %}disabled{% endif %}>
+                        <i class="fas fa-link mr-2"></i>
+                        Connect Account
+                    </button>
+                    <a href="{% url 'user:dashboard' %}" class="px-6 py-3 border border-gray-600 text-gray-300 hover:bg-slate-800 rounded-lg transition-colors flex items-center justify-center">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Platform Info Cards -->
+        <div class="mt-8 space-y-6">
+            <!-- Instagram Info -->
+            <div class="dark-card rounded-xl p-6 border-l-4 border-pink-500">
+                <div class="flex items-center mb-4">
+                    <div class="w-10 h-10 bg-pink-500/20 rounded-full flex items-center justify-center mr-3">
+                        <i class="fab fa-instagram text-pink-400"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white">Instagram Integration</h3>
+                </div>
+                <ul class="text-gray-400 space-y-2 text-sm">
+                    <li class="flex items-start">
+                        <i class="fas fa-check text-green-400 mr-2 mt-1"></i>
+                        Creates a verified Instagram account linked to your Rito ID
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check text-green-400 mr-2 mt-1"></i>
+                        Enhanced security with hardware-bound authentication
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check text-green-400 mr-2 mt-1"></i>
+                        Protects against impersonation and fake accounts
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check text-green-400 mr-2 mt-1"></i>
+                        Zero-knowledge proof verification for age-restricted content
+                    </li>
+                </ul>
+            </div>
+
+            <!-- YouTube Info -->
+            <div class="dark-card rounded-xl p-6 border-l-4 border-red-500">
+                <div class="flex items-center mb-4">
+                    <div class="w-10 h-10 bg-red-500/20 rounded-full flex items-center justify-center mr-3">
+                        <i class="fab fa-youtube text-red-400"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white">YouTube Integration</h3>
+                </div>
+                <ul class="text-gray-400 space-y-2 text-sm">
+                    <li class="flex items-start">
+                        <i class="fas fa-check text-green-400 mr-2 mt-1"></i>
+                        Creates a sovereign YouTube channel with enhanced trust
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check text-green-400 mr-2 mt-1"></i>
+                        Hardware-based content signing and verification
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check text-green-400 mr-2 mt-1"></i>
+                        Protects against channel hijacking and impersonation
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check text-green-400 mr-2 mt-1"></i>
+                        Age verification without exposing personal data
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Security Notice -->
+        <div class="mt-6 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
+            <div class="flex items-start">
+                <i class="fas fa-shield-alt text-blue-400 mt-1 mr-3"></i>
+                <div>
+                    <h4 class="text-blue-300 font-semibold mb-1">Enhanced Security</h4>
+                    <p class="text-blue-200/80 text-sm">
+                        Your social accounts are protected by hardware-based keys and zero-knowledge proofs. 
+                        No personal data is shared with the platforms - only verified attestations.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    // Update platform name in terms agreement
+    document.querySelectorAll('input[name="platform"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const platformName = this.nextElementSibling.querySelector('h3').textContent;
+            document.getElementById('platform-name').textContent = platformName;
+        });
+    });
+
+    // Form validation
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const platform = document.querySelector('input[name="platform"]:checked');
+        const terms = document.getElementById('terms').checked;
+
+        if (!platform) {
+            e.preventDefault();
+            showNotification('Please select a platform to connect', 'error');
+            return;
+        }
+
+        if (!terms) {
+            e.preventDefault();
+            showNotification('Please agree to the terms and conditions', 'error');
+            return;
+        }
+
+        {% if not device %}
+        e.preventDefault();
+        showNotification('Please register a device first to connect social accounts', 'error');
+        return;
+        {% endif %}
+    });
+
+    // Notification system
+    function showNotification(message, type) {
+        // Remove existing notifications
+        const existingNotifications = document.querySelectorAll('.custom-notification');
+        existingNotifications.forEach(notification => notification.remove());
+
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `custom-notification fixed top-4 right-4 p-4 rounded-lg z-50 transform transition-all duration-300 ${
+            type === 'success' ? 'bg-green-600' : 'bg-red-600'
+        } text-white shadow-lg`;
+        notification.innerHTML = `
+            <div class="flex items-center">
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'} mr-2"></i>
+                <span>${message}</span>
+            </div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Animate in
+        setTimeout(() => {
+            notification.classList.add('translate-x-0', 'opacity-100');
+        }, 10);
+
+        // Remove after 5 seconds
+        setTimeout(() => {
+            notification.classList.remove('translate-x-0', 'opacity-100');
+            notification.classList.add('translate-x-full', 'opacity-0');
+            setTimeout(() => {
+                notification.remove();
+            }, 300);
+        }, 5000);
+    }
+
+    // Initialize notification styles
+    const style = document.createElement('style');
+    style.textContent = `
+        .custom-notification {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        .custom-notification.translate-x-0 {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .btn-primary:disabled:hover::before {
+            left: -100%;
+        }
+    `;
+    document.head.appendChild(style);
+</script>
+{% endblock %}
+{% endblock %}
